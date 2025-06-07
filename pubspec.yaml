@@ -1,0 +1,111 @@
+name: safeedu_api
+description: API SafeEdu para o projeto WorldSkills 2025 - Módulo A2 Desenvolvimento de Aplicativos
+version: 1.0.0+1
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  # Framework web principal para Dart
+  shelf: ^1.4.0
+  
+  # Sistema de roteamento para endpoints
+  shelf_router: ^1.1.0
+  
+  # Middleware para CORS (Cross-Origin Resource Sharing)
+  shelf_cors_headers: ^0.1.5
+  
+  # Biblioteca para JWT (JSON Web Tokens)
+  dart_jsonwebtoken: ^2.12.0
+  
+  # Funções criptográficas (hash de senhas)
+  crypto: ^3.0.0
+  
+  # Para parsing de multipart (upload de arquivos)
+  mime: ^1.0.0
+
+dev_dependencies:
+  # Framework de testes
+  test: ^1.24.0
+  
+  # Regras de lint para código limpo
+  lints: ^3.0.0
+  
+  # Analisador de código Dart
+  dart_code_metrics: ^5.7.6
+
+# Configurações do executável
+executables:
+  safeedu_api: server
+
+# Configurações específicas do projeto
+funding:
+  - https://github.com/sponsors/worldskills
+
+# Tópicos para classificação
+topics:
+  - api
+  - jwt
+  - worldskills
+  - safeedu
+  - education
+  - security
+
+# Screenshots e exemplo de uso
+screenshots:
+  - description: 'API SafeEdu endpoints'
+    path: docs/api_overview.png
+  - description: 'Authentication flow'
+    path: docs/auth_flow.png
+
+# Plataformas suportadas
+platforms:
+  linux:
+  macos:
+  windows:
+  web:
+
+# Configurações de análise de código
+analyzer:
+  exclude:
+    - build/**
+    - uploads/**
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+# Configurações de lint
+linter:
+  rules:
+    # Regras de estilo recomendadas
+    - prefer_single_quotes
+    - prefer_const_constructors
+    - prefer_const_literals_to_create_immutables
+    - prefer_final_locals
+    - prefer_final_in_for_each
+    - prefer_if_null_operators
+    - prefer_is_empty
+    - prefer_is_not_empty
+    - prefer_null_aware_operators
+    - prefer_spread_collections
+    - prefer_typing_uninitialized_variables
+    - avoid_print
+    - avoid_unnecessary_containers
+    - avoid_web_libraries_in_flutter
+    - use_key_in_widget_constructors
+    - sized_box_for_whitespace
+    - sort_child_properties_last
+    - use_build_context_synchronously
+    - library_private_types_in_public_api
+    - avoid_init_to_null
+    - prefer_collection_literals
+    - unnecessary_const
+    - unnecessary_new
+    - file_names
+    - non_constant_identifier_names
+    - constant_identifier_names
+    - directives_ordering
+    - lines_longer_than_80_chars
+    - require_trailing_commas

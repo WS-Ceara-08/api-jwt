@@ -1,0 +1,228 @@
+# fly.toml - Configuração para deploy no Fly.io
+# SafeEdu API - WorldSkills 2025
+
+# =============================================================================
+# CONFIGURAÇÕES BÁSICAS DA APLICAÇÃO
+# =============================================================================
+
+# Nome da aplicação (deve ser único no Fly.io)
+app = "safeedu-api"
+primary_region = "gru"  # São Paulo, Brasil (mais próximo)
+kill_signal = "SIGINT"
+kill_timeout = "5s"
+
+# =============================================================================
+# CONFIGURAÇÕES DE BUILD
+# =============================================================================
+
+[build]
+  # Usar Dockerfile para build
+  dockerfile = "Dockerfile"
+  
+  # Ignorar arquivos durante build
+  ignorefile = ".dockerignore"
+
+# =============================================================================
+# VARIÁVEIS DE AMBIENTE
+# =============================================================================
+
+[env]
+  # Configurações da aplicação
+  PORT = "8080"
+  HOST = "0.0.0.0"
+  ENVIRONMENT = "production"
+  
+  # Configurações de log
+  LOG_LEVEL = "info"
+  
+  # Timezone
+  TZ = "America/Fortaleza"
+  
+  # Configurações específicas da API
+  API_VERSION = "1.0.0"
+  MAX_UPLOAD_SIZE = "5242880"  # 5MB em bytes
+  
+  # CORS settings
+  CORS_ORIGIN = "*"
+  CORS_METHODS = "GET,POST,PUT,DELETE,OPTIONS"
+
+# =============================================================================
+# SERVIÇOS HTTP
+# =============================================================================
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8080
+  processes = ["app"]
+  
+  # Configurações de concorrência
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 50      # Máximo de conexões simultâneas
+    soft_limit = 40      # Limite suave para auto-scaling
+    
+  # Configurações de ports externos
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true   # Redirecionar HTTP para HTTPS
+    
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+    
+  # =============================================================================
+  # HEALTH CHECKS
+  # =============================================================================
+  
+  # TCP Check - Verificação básica de conectividade
+  [[services.tcp_checks]]
+    interval = "15s"      # Verificar a cada 15 segundos
+    timeout = "2s"        # Timeout de 2 segundos
+    grace_period = "10s"  # Período de graça após deploy
+    restart_limit = 0     # Não reiniciar automaticamente por TCP check
+    
+  # HTTP Check - Verificação do endpoint de saúde
+  [[services.http_checks]]
+    interval = "30s"           # Verificar a cada 30 segundos
+    timeout = "5s"             # Timeout de 5 segundos
+    grace_period = "20s"       # Período de graça após deploy
+    restart_limit = 0          # Não reiniciar automaticamente
+    method = "GET"             # Método HTTP
+    path = "/health"           # Endpoint de health check
+    protocol = "http"          # Protocolo
+    tls_skip_verify = false    # Verificar certificado TLS
+    
+    # Headers para o health check
+    [services.http_checks.headers]
+      User-Agent = "Fly-Health-Check"
+      Accept = "application/json"
+
+# =============================================================================
+# VOLUMES (ARMAZENAMENTO PERSISTENTE)
+# =============================================================================
+
+[mounts]
+  # Volume para uploads de arquivos
+  source = "safeedu_uploads"
+  destination = "/app/uploads"
+  initial_size = "1gb"        # Tamanho inicial de 1GB
+  
+# =============================================================================
+# CONFIGURAÇÕES DE DEPLOY
+# =============================================================================
+
+[deploy]
+  # Estratégia de deploy
+  strategy = "rolling"        # Deploy gradual (sem downtime)
+  
+  # Configurações de release
+  release_command = "echo 'SafeEdu API deploy iniciado'"
+  
+# =============================================================================
+# PROCESSOS
+# =============================================================================
+
+[processes]
+  # Processo principal da aplicação
+  app = "/app/server"
+  
+# =============================================================================
+# MÉTRICAS E MONITORING
+# =============================================================================
+
+[metrics]
+  # Habilitar métricas do Fly.io
+  port = 9091
+  path = "/metrics"
+
+# =============================================================================
+# CONFIGURAÇÕES EXPERIMENTAIS
+# =============================================================================
+
+[experimental]
+  # Habilitar recursos experimentais
+  auto_rollback = true        # Rollback automático em caso de falha
+  enable_consul = false       # Não usar Consul
+  cmd = []                    # Comando customizado (vazio = usar padrão)
+  entrypoint = []             # Entrypoint customizado (vazio = usar padrão)
+
+# =============================================================================
+# CONFIGURAÇÕES DE REDE
+# =============================================================================
+
+# Configurações de firewall (se necessário)
+# [[statics]]
+#   guest_path = "/app/uploads"
+#   url_prefix = "/uploads"
+
+# =============================================================================
+# SECRETS (CONFIGURADO VIA CLI)
+# =============================================================================
+
+# Os secrets são configurados via CLI com comandos:
+# fly secrets set JWT_SECRET="sua_chave_jwt_super_secreta"
+# fly secrets set DATABASE_URL="postgresql://..." (se usar banco)
+
+# =============================================================================
+# CONFIGURAÇÕES DE REGIÃO E SCALING
+# =============================================================================
+
+# Regiões onde a aplicação pode rodar
+# primary_region já definido acima como "gru" (São Paulo)
+
+# Configurações de auto-scaling
+[scaling]
+  min_machines_running = 1    # Mínimo de 1 instância sempre rodando
+  max_machines_running = 3    # Máximo de 3 instâncias (para economia)
+
+# =============================================================================
+# CONFIGURAÇÕES DE BACKUP (OPCIONAL)
+# =============================================================================
+
+# Configurações de backup do volume (se necessário)
+# [backup]
+#   schedule = "daily"
+#   retention = "7d"
+
+# =============================================================================
+# CONFIGURAÇÕES DE DESENVOLVIMENTO
+# =============================================================================
+
+# Configurações específicas para desenvolvimento (comentadas em produção)
+# [env.development]
+#   LOG_LEVEL = "debug"
+#   JWT_SECRET = "development_secret_key"
+
+# =============================================================================
+# CONFIGURAÇÕES DE RECURSOS
+# =============================================================================
+
+# Configurações de CPU e memória (opcional - Fly.io auto-detecta)
+# [vm]
+#   cpu_kind = "shared"
+#   cpus = 1
+#   memory_mb = 256
+
+# =============================================================================
+# NOTAS IMPORTANTES
+# =============================================================================
+
+# 1. Substitua "safeedu-api" por um nome único se necessário
+# 2. Configure secrets via CLI: fly secrets set JWT_SECRET="sua_chave"
+# 3. Crie o volume antes do deploy: fly volumes create safeedu_uploads --region gru --size 1
+# 4. Para múltiplas regiões, adicione: fly scale count 2 --region gru,iad
+# 5. Monitor via: fly dashboard, fly logs, fly status
+
+# =============================================================================
+# COMANDOS ÚTEIS
+# =============================================================================
+
+# Deploy:          fly deploy
+# Status:          fly status
+# Logs:            fly logs
+# SSH:             fly ssh console
+# Scale:           fly scale count 2
+# Secrets:         fly secrets list
+# Dashboard:       fly dashboard
+# Restart:         fly restart

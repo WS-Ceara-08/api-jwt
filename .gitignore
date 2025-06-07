@@ -1,0 +1,404 @@
+# =============================================================================
+# .gitignore - SafeEdu API
+# WorldSkills 2025 - Módulo A2
+# =============================================================================
+
+# =============================================================================
+# DART E FLUTTER
+# =============================================================================
+
+# Diretórios gerados pelo Dart
+.dart_tool/
+.packages
+.pub/
+.pub-cache/
+pubspec.lock
+
+# Build outputs
+build/
+dist/
+out/
+
+# Executáveis compilados
+bin/*.exe
+bin/server_compiled
+*.exe
+*.app
+
+# =============================================================================
+# IDEs E EDITORES
+# =============================================================================
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# IntelliJ IDEA / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# =============================================================================
+# SISTEMA OPERACIONAL
+# =============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# =============================================================================
+# LOGS E DEBUGGING
+# =============================================================================
+
+# Logs gerais
+*.log
+logs/
+*.log.*
+log_*.txt
+
+# Debug files
+*.pdb
+*.dbg
+
+# Crash reports
+crash_reports/
+*.crash
+*.dmp
+
+# =============================================================================
+# UPLOADS E ARQUIVOS TEMPORÁRIOS
+# =============================================================================
+
+# Uploads (manter apenas .gitkeep)
+uploads/*
+!uploads/.gitkeep
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+temp/
+tmp/
+
+# Cache
+cache/
+.cache/
+*.cache
+
+# =============================================================================
+# DOCKER E CONTAINERS
+# =============================================================================
+
+# Docker
+.dockerignore.bak
+docker-compose.override.yml
+.docker/
+
+# Kubernetes
+*.kubeconfig
+k8s-configs/
+
+# =============================================================================
+# SECRETS E CONFIGURAÇÕES SENSÍVEIS
+# =============================================================================
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+.env.test
+
+# Chaves e certificados
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.csr
+secrets/
+private/
+
+# Configurações específicas do usuário
+config.local.*
+*.local.toml
+*.local.yaml
+*.local.json
+
+# =============================================================================
+# FLY.IO E DEPLOY
+# =============================================================================
+
+# Fly.io
+fly.toml.bak
+.fly/
+
+# Deploy artifacts
+deploy/
+releases/
+artifacts/
+
+# =============================================================================
+# BANCO DE DADOS
+# =============================================================================
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# PostgreSQL
+*.sql.gz
+*.dump
+
+# Redis
+dump.rdb
+
+# =============================================================================
+# TESTES
+# =============================================================================
+
+# Coverage reports
+coverage/
+.coverage
+*.coverage
+lcov.info
+coverage.xml
+
+# Test outputs
+test_reports/
+test_results/
+.test_output/
+
+# Mocks gerados
+test/mocks/generated/
+
+# =============================================================================
+# DOCUMENTAÇÃO
+# =============================================================================
+
+# Documentação gerada
+docs/generated/
+docs/build/
+doc/api/
+
+# =============================================================================
+# PACKAGES E DEPENDÊNCIAS
+# =============================================================================
+
+# Node.js (se usar ferramentas JS)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Python (se usar ferramentas Python)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.venv/
+venv/
+
+# =============================================================================
+# FERRAMENTAS DE DESENVOLVIMENTO
+# =============================================================================
+
+# Análise de código
+.dart_code_metrics.json
+analysis_options.local.yaml
+
+# Benchmark results
+benchmarks/results/
+
+# Profiling
+*.prof
+*.trace
+
+# =============================================================================
+# ARQUIVOS DE MÍDIA GRANDES
+# =============================================================================
+
+# Imagens grandes
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.svg
+# Exceto assets essenciais
+!assets/**
+!docs/images/**
+
+# Vídeos
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+
+# Áudio
+*.mp3
+*.wav
+*.flac
+*.aac
+*.ogg
+
+# Arquivos compactados
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.tar.bz2
+
+# =============================================================================
+# ARQUIVOS ESPECÍFICOS DO PROJETO
+# =============================================================================
+
+# Backups do projeto
+project_backup/
+*.backup
+
+# Exports de dados
+exports/
+data_exports/
+
+# Screenshots de teste
+screenshots/
+test_screenshots/
+
+# =============================================================================
+# FERRAMENTAS DE CI/CD
+# =============================================================================
+
+# GitHub Actions
+# (mantemos .github/ no repositório)
+
+# GitLab CI
+.gitlab-ci.local.yml
+
+# Jenkins
+.jenkins/
+
+# Travis CI
+.travis.yml.bak
+
+# =============================================================================
+# FERRAMENTAS DE MONITORAMENTO
+# =============================================================================
+
+# New Relic
+newrelic.ini
+
+# Sentry
+.sentryclirc
+
+# =============================================================================
+# OUTROS
+# =============================================================================
+
+# Diretórios de build específicos
+web/
+android/
+ios/
+linux/
+macos/
+windows/
+
+# Arquivos de configuração de usuário
+.user
+*.user
+
+# Arquivos de lock específicos
+*.lock
+lockfile
+
+# Diretório de downloads
+downloads/
+
+# Arquivos de swap
+*.swp
+*.swap
+
+# =============================================================================
+# COMENTÁRIOS E NOTAS
+# =============================================================================
+
+# Arquivos de notas pessoais
+notes.txt
+TODO.txt
+NOTES.md
+todo.md
+
+# Arquivos de rascunho
+draft/
+drafts/
+scratch/
+
+# =============================================================================
+# FINAL
+# =============================================================================
+
+# Qualquer arquivo que termine com .local
+*.local
+
+# Qualquer arquivo que termine com .private
+*.private
+
+# Arquivos que começam com ponto e terminam com .tmp
+.*.tmp

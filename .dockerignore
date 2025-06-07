@@ -1,0 +1,309 @@
+# =============================================================================
+# .dockerignore - SafeEdu API
+# WorldSkills 2025 - Módulo A2
+# Otimiza o build do Docker excluindo arquivos desnecessários
+# =============================================================================
+
+# =============================================================================
+# CONTROLE DE VERSÃO
+# =============================================================================
+
+# Git
+.git
+.gitignore
+.gitattributes
+.github/
+.gitlab-ci.yml
+
+# Outros VCS
+.svn/
+.hg/
+.bzr/
+
+# =============================================================================
+# DOCUMENTAÇÃO E README
+# =============================================================================
+
+# Documentação
+README.md
+CHANGELOG.md
+LICENSE
+CONTRIBUTING.md
+docs/
+*.md
+
+# Arquivos de ajuda
+HELP.txt
+INSTALL.txt
+
+# =============================================================================
+# ARQUIVOS DE DESENVOLVIMENTO
+# =============================================================================
+
+# IDEs e editores
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Configurações de desenvolvimento
+.editorconfig
+.prettierrc
+.eslintrc*
+
+# =============================================================================
+# LOGS E DEBUGGING
+# =============================================================================
+
+# Logs
+*.log
+logs/
+log_*.txt
+
+# Debug
+*.pdb
+*.dbg
+
+# =============================================================================
+# TESTES
+# =============================================================================
+
+# Diretórios de teste
+test/
+tests/
+spec/
+specs/
+
+# Coverage
+coverage/
+.coverage
+*.coverage
+
+# Test results
+test_reports/
+test_results/
+
+# Mock data
+mocks/
+fixtures/
+
+# =============================================================================
+# BUILD E CACHE LOCAL
+# =============================================================================
+
+# Dart build artifacts (locais)
+.dart_tool/
+.pub-cache/
+.packages
+build/
+
+# Cache
+.cache/
+cache/
+tmp/
+temp/
+
+# =============================================================================
+# UPLOADS E DADOS TEMPORÁRIOS
+# =============================================================================
+
+# Uploads (exceto .gitkeep)
+uploads/*
+!uploads/.gitkeep
+
+# Dados temporários
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Exports
+exports/
+downloads/
+
+# =============================================================================
+# DOCKER E CONTAINERS
+# =============================================================================
+
+# Docker files (evitar recursão)
+Dockerfile*
+.dockerignore
+docker-compose*.yml
+.docker/
+
+# Container logs
+containers/
+
+# =============================================================================
+# SCRIPTS E FERRAMENTAS
+# =============================================================================
+
+# Scripts de desenvolvimento (manter apenas essenciais)
+scripts/
+!scripts/deploy.sh
+
+# Ferramentas de build
+tools/
+utilities/
+
+# =============================================================================
+# CONFIGURAÇÕES SENSÍVEIS
+# =============================================================================
+
+# Variáveis de ambiente
+.env*
+secrets/
+private/
+
+# Chaves e certificados
+*.key
+*.pem
+*.crt
+
+# =============================================================================
+# DEPLOY E CI/CD
+# =============================================================================
+
+# Fly.io (arquivo de config será copiado separadamente)
+config/fly.toml
+fly.toml
+
+# CI/CD configs
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Deploy artifacts
+deploy/
+releases/
+
+# =============================================================================
+# BANCO DE DADOS
+# =============================================================================
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Backups
+*.sql
+*.dump
+
+# =============================================================================
+# NODE.JS (se usado para ferramentas)
+# =============================================================================
+
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+
+# Package files
+package*.json
+yarn.lock
+
+# =============================================================================
+# PYTHON (se usado para ferramentas)
+# =============================================================================
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# =============================================================================
+# ARQUIVOS GRANDES E MÍDIA
+# =============================================================================
+
+# Imagens grandes (manter apenas essenciais)
+*.png
+*.jpg
+*.jpeg
+*.gif
+!assets/**
+
+# Vídeos
+*.mp4
+*.avi
+*.mov
+
+# Arquivos compactados
+*.zip
+*.tar.gz
+*.rar
+
+# =============================================================================
+# MONITORAMENTO E ANÁLISE
+# =============================================================================
+
+# Performance
+*.prof
+*.trace
+
+# Monitoring configs
+newrelic.ini
+.sentryclirc
+
+# =============================================================================
+# ARQUIVOS ESPECÍFICOS DO PROJETO
+# =============================================================================
+
+# Backups do projeto
+project_backup/
+*.backup
+
+# Screenshots
+screenshots/
+test_screenshots/
+
+# Notas de desenvolvimento
+notes.txt
+TODO.txt
+NOTES.md
+
+# =============================================================================
+# OUTROS ARQUIVOS DESNECESSÁRIOS
+# =============================================================================
+
+# Arquivos de configuração local
+*.local
+*.private
+
+# Arquivos de swap
+*.swp
+*.swap
+
+# Diretórios vazios
+empty_dir/
+
+# =============================================================================
+# INCLUSÕES IMPORTANTES (precedência sobre exclusões)
+# =============================================================================
+
+# Garantir que arquivos essenciais sejam incluídos
+!bin/server.dart
+!pubspec.yaml
+!lib/
+!uploads/.gitkeep
+
+# =============================================================================
+# NOTAS IMPORTANTES
+# =============================================================================
+
+# Este .dockerignore é otimizado para:
+# 1. Reduzir o tamanho do contexto de build
+# 2. Acelerar o processo de build
+# 3. Evitar vazamento de informações sensíveis
+# 4. Manter apenas arquivos essenciais para produção
+
+# Arquivos incluídos no build:
+# - bin/server.dart (código principal)
+# - pubspec.yaml (dependências)
+# - lib/ (bibliotecas se houver)
+# - uploads/.gitkeep (estrutura de diretório)
