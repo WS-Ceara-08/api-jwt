@@ -141,7 +141,7 @@ check_api_availability() {
     if [[ "$health_response" == *"ERROR"* ]]; then
         print_failure "BiblioTech API não está rodando em $BASE_URL"
         print_info "💡 Para testar localmente: dart run bin/server.dart"
-        print_info "💡 Para testar produção: $0 https://safeedu-api.fly.dev"
+        print_info "💡 Para testar produção: $0 https://bibliotech-api.fly.dev"
         exit 1
     else
         print_success "BiblioTech API está respondendo"
@@ -588,7 +588,7 @@ main() {
                 echo ""
                 echo "Exemplos:"
                 echo "  $0                                                    # Testar local"
-                echo "  $0 https://safeedu-api.fly.dev        # Testar produção"
+                echo "  $0 https://bibliotech-api.fly.dev        # Testar produção"
                 echo "  $0 -v                                                 # Modo verbose"
                 exit 0
                 ;;
@@ -922,7 +922,7 @@ main() {
                 echo ""
                 echo "Exemplos:"
                 echo "  $0                                                    # Testar local"
-                echo "  $0 https://safeedu-api.fly.dev        # Testar produção"
+                echo "  $0 https://bibliotech-api.fly.dev        # Testar produção"
                 echo "  $0 -v                                                 # Modo verbose"
                 exit 0
                 ;;

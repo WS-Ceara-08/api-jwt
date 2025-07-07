@@ -1,0 +1,584 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-07-07T20:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_health_check",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745600000,
+      "created": 1688745600000,
+      "url": "https://bibliotech-api.fly.dev/health",
+      "name": "01. Health Check",
+      "description": "Verificar se a API está funcionando",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1688745600000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_debug_routes",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745601000,
+      "created": 1688745601000,
+      "url": "https://bibliotech-api.fly.dev/debug/routes",
+      "name": "02. Debug Routes",
+      "description": "Listar todas as rotas disponíveis",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1688745601000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_login_fred",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745602000,
+      "created": 1688745602000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/jwt/generate_token",
+      "name": "03. Login (Fred)",
+      "description": "Login do usuário Fred",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"fred@fred.com\",\n  \"password\": \"123abc@\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745602000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_login_julia",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745603000,
+      "created": 1688745603000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/jwt/generate_token",
+      "name": "04. Login (Júlia)",
+      "description": "Login da usuária Júlia",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"julia@edulib.com\",\n  \"password\": \"julia123!\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745603000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_login_admin",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745604000,
+      "created": 1688745604000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/jwt/generate_token",
+      "name": "04b. Login (Admin)",
+      "description": "Login do usuário Admin",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@edulib.com\",\n  \"password\": \"admin2024#\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745604000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_login_invalid",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745605000,
+      "created": 1688745605000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/jwt/generate_token",
+      "name": "05. Login Inválido (Teste Erro)",
+      "description": "Teste de login com senha incorreta",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"fred@fred.com\",\n  \"password\": \"senha_errada\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745605000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_validate_token",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745606000,
+      "created": 1688745606000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/jwt/validate_token",
+      "name": "06. Validar Token",
+      "description": "Validar se um token JWT é válido",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"token\": \"{{ _.token }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745606000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_motd",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745607000,
+      "created": 1688745607000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/motd",
+      "name": "07. MOTD (Message of the Day)",
+      "description": "Obter mensagem do dia",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1688745607000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_libraries",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745608000,
+      "created": 1688745608000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/library_list",
+      "name": "08. Lista de Bibliotecas",
+      "description": "Obter lista de todas as bibliotecas",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745608000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_libraries_no_token",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745609000,
+      "created": 1688745609000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/library_list",
+      "name": "09. Bibliotecas Sem Token (Teste Erro)",
+      "description": "Teste de acesso sem token de autorização",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1688745609000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_comments_all",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745610000,
+      "created": 1688745610000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/comments",
+      "name": "10. Listar Comentários",
+      "description": "Obter todos os comentários",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745610000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_comments_by_library",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745611000,
+      "created": 1688745611000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/comments",
+      "name": "11. Comentários por Biblioteca",
+      "description": "Obter comentários de uma biblioteca específica",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "id_biblioteca",
+          "value": "1"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745611000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_add_comment",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745612000,
+      "created": 1688745612000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/comments",
+      "name": "12. Adicionar Comentário",
+      "description": "Adicionar um novo comentário",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"id_biblioteca\": \"1\",\n  \"comentario\": \"Comentário de teste via Insomnia! Biblioteca muito boa.\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745612000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_invalid_comment",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745613000,
+      "created": 1688745613000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/comments",
+      "name": "13. Comentário Inválido (Teste Erro)",
+      "description": "Teste de comentário com dados inválidos",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"id_biblioteca\": \"999\",\n  \"comentario\": \"\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745613000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_list_prints",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745614000,
+      "created": 1688745614000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/prints",
+      "name": "14. Listar Prints",
+      "description": "Obter lista de prints enviados",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745614000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_upload_print_json",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745615000,
+      "created": 1688745615000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/prints",
+      "name": "15. Upload Print (JSON)",
+      "description": "Upload de print via JSON",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"id_user\": \"1\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745615000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_upload_print_multipart",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745616000,
+      "created": 1688745616000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/prints",
+      "name": "16. Upload Print (Multipart)",
+      "description": "Upload de print via multipart form",
+      "method": "POST",
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": []
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745616000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_error_simulation",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745617000,
+      "created": 1688745617000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/library_list",
+      "name": "17. Simular Erro 500",
+      "description": "Teste de erro interno do servidor",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "test_error",
+          "value": "biblioteca_indisponivel"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745617000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "req_error_force_header",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745618000,
+      "created": 1688745618000,
+      "url": "https://bibliotech-api.fly.dev/worldskills/bibliotech/library_list",
+      "name": "18. Forçar Erro via Header",
+      "description": "Teste de erro forçado via header especial",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        },
+        {
+          "name": "x-force-error",
+          "value": "true"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1688745618000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "_type": "request"
+    },
+    {
+      "_id": "wrk_bibliotech",
+      "parentId": null,
+      "modified": 1688745599000,
+      "created": 1688745599000,
+      "name": "BiblioTech API",
+      "description": "Coleção completa de testes da API BiblioTech - EduLib\n\n🏛️ **Sobre a API:**\n- **Empresa:** EduLib\n- **Sistema:** BiblioTech\n- **Versão:** 1.0.0\n- **Base URL:** https://bibliotech-api.fly.dev\n\n🔑 **Credenciais de Teste:**\n- fred@fred.com / 123abc@\n- julia@edulib.com / julia123!\n- admin@edulib.com / admin2024#\n\n⚠️ **Importante:**\n- Tokens expiram em 5 minutos\n- Senhas devem ter símbolos obrigatórios\n- Use variável {{ _.token }} para reutilizar tokens\n\n📖 **Ordem de Teste Recomendada:**\n1. Health Check\n2. Debug Routes\n3. Login (Fred/Júlia/Admin)\n4. Validar Token\n5. MOTD\n6. Lista Bibliotecas\n7. Comentários\n8. Prints\n9. Testes de Erro",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_bibliotech_base",
+      "parentId": "wrk_bibliotech",
+      "modified": 1688745599500,
+      "created": 1688745599500,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "https://bibliotech-api.fly.dev",
+        "token": "",
+        "user_id": "1",
+        "biblioteca_id": "1"
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url", "token", "user_id", "biblioteca_id"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1688745599500,
+      "_type": "environment"
+    }
+  ]
+}

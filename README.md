@@ -8,7 +8,7 @@ Todos os endpoints foram implementados seguindo as especificações do simulado!
 
 ## 🌐 **URLs de Produção**
 
-- **Hospedagem:** https://safeedu-api.fly.dev/worldskills/bibliotech/
+- **Hospedagem:** https://bibliotech-api.fly.dev/worldskills/bibliotech/
 - **Local (Desenvolvimento):** http://localhost:8080/worldskills/bibliotech/
 
 ## 🔒 **Configurações de Avaliação**
@@ -41,17 +41,17 @@ curl -H "Authorization: Bearer <token>" \
 
 ```bash
 # 1. Health check
-curl https://safeedu-api.fly.dev/health
+curl https://bibliotech-api.fly.dev/health
 
 # 2. Login (token válido por 5 minutos)
-curl -X POST https://safeedu-api.fly.dev/worldskills/bibliotech/jwt/generate_token \
+curl -X POST https://bibliotech-api.fly.dev/worldskills/bibliotech/jwt/generate_token \
   -H "Content-Type: application/json" \
   -d '{"email": "fred@fred.com", "password": "123abc@"}'
 
 # 3. Teste de erro forçado (deve retornar 500)
 curl -H "Authorization: Bearer <token>" \
      -H "X-Force-Error: true" \
-     https://safeedu-api.fly.dev/worldskills/bibliotech/library_list
+     https://bibliotech-api.fly.dev/worldskills/bibliotech/library_list
 
 # 4. Aguardar 5+ min para token expirar e testar 401
 ```
@@ -145,10 +145,10 @@ curl http://localhost:8080/debug/routes
 
 ```bash
 # Testar API em produção
-./scripts/test_bibliotech.sh https://safeedu-api.fly.dev
+./scripts/test_bibliotech.sh https://bibliotech-api.fly.dev
 
 # Teste rápido
-curl https://safeedu-api.fly.dev/worldskills/bibliotech/motd
+curl https://bibliotech-api.fly.dev/worldskills/bibliotech/motd
 ```
 
 ---
@@ -159,7 +159,7 @@ curl https://safeedu-api.fly.dev/worldskills/bibliotech/motd
 
 ```bash
 # Login com usuário de teste
-curl -X POST https://safeedu-api.fly.dev/worldskills/bibliotech/jwt/generate_token \
+curl -X POST https://bibliotech-api.fly.dev/worldskills/bibliotech/jwt/generate_token \
   -H "Content-Type: application/json" \
   -d '{"email": "fred@fred.com", "password": "123abc@"}'
 ```
@@ -184,7 +184,7 @@ curl -X POST https://safeedu-api.fly.dev/worldskills/bibliotech/jwt/generate_tok
 ```bash
 # Obter lista de bibliotecas
 curl -H "Authorization: Bearer <token>" \
-  https://safeedu-api.fly.dev/worldskills/bibliotech/library_list
+  https://bibliotech-api.fly.dev/worldskills/bibliotech/library_list
 ```
 
 **Response:**
@@ -212,7 +212,7 @@ curl -H "Authorization: Bearer <token>" \
 
 ```bash
 # Comentar sobre uma biblioteca
-curl -X POST https://safeedu-api.fly.dev/worldskills/bibliotech/comments \
+curl -X POST https://bibliotech-api.fly.dev/worldskills/bibliotech/comments \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{"id_biblioteca": "1", "comentario": "Excelente acervo!"}'
@@ -222,13 +222,13 @@ curl -X POST https://safeedu-api.fly.dev/worldskills/bibliotech/comments \
 
 ```bash
 # Upload via JSON (simulado)
-curl -X POST https://safeedu-api.fly.dev/worldskills/bibliotech/prints \
+curl -X POST https://bibliotech-api.fly.dev/worldskills/bibliotech/prints \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{"id_user": "1"}'
 
 # Upload via Multipart
-curl -X POST https://safeedu-api.fly.dev/worldskills/bibliotech/prints \
+curl -X POST https://bibliotech-api.fly.dev/worldskills/bibliotech/prints \
   -H "Authorization: Bearer <token>" \
   -F "id_user=1" \
   -F "imagem=@screenshot.png"
@@ -317,7 +317,7 @@ bibliotech_api/
 ./scripts/test_bibliotech.sh
 
 # Teste produção
-./scripts/test_bibliotech.sh https://safeedu-api.fly.dev
+./scripts/test_bibliotech.sh https://bibliotech-api.fly.dev
 
 # Modo verbose
 ./scripts/test_bibliotech.sh -v
@@ -409,7 +409,7 @@ docker logs <container_id>
 
 ```dart
 class BiblioTechService {
-  static const String baseUrl = 'https://safeedu-api.fly.dev';
+  static const String baseUrl = 'https://bibliotech-api.fly.dev';
   
   Future<Map<String, dynamic>> login(String email, String password) async {
     final response = await http.post(

@@ -426,10 +426,3 @@ safeedu_files/
 # Arquivos específicos de teste da BiblioTech
 bibliotech_test_*
 test_bibliotech_*
-
-# insomnia e Postman
-bibliotech-insomnia-collection.json
-bibliotech-postman-collection.json
-
-# insomnia.md  
-insomnia.md

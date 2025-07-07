@@ -10,8 +10,15 @@
 ## 🔍 **Rota 2: Debug Routes**
 
 ### **Configuração:**
+- **Method:*## 📚 **Rota 8: Lista de Bibliotecas**
+
+### **Configuração:**
 - **Method:** GET
-- **URL:** `http://localhost:8080/debug/routes`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/library_list`
+- **Headers:** 
+  ```
+  Authorization: Bearer SEU_TOKEN_AQUI
+  ```**URL:** `https://bibliotech-api.fly.dev/debug/routes`
 - **Headers:** Nenhum necessário
 - **Body:** Nenhum
 
@@ -48,7 +55,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/worldskills/bibliotech/jwt/generate_token`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/jwt/generate_token`
 - **Headers:** 
   ```
   Content-Type: application/json
@@ -88,7 +95,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/worldskills/bibliotech/jwt/generate_token`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/jwt/generate_token`
 - **Headers:** 
   ```
   Content-Type: application/json
@@ -127,7 +134,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/worldskills/bibliotech/jwt/generate_token`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/jwt/generate_token`
 - **Headers:** 
   ```
   Content-Type: application/json
@@ -159,7 +166,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/worldskills/bibliotech/jwt/validate_token`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/jwt/validate_token`
 - **Headers:** 
   ```
   Content-Type: application/json
@@ -196,7 +203,7 @@
 
 ### **Configuração:**
 - **Method:** GET
-- **URL:** `http://localhost:8080/worldskills/bibliotech/motd`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/motd`
 - **Headers:** Nenhum necessário
 - **Body:** Nenhum
 
@@ -261,7 +268,7 @@
 
 ### **Configuração:**
 - **Method:** GET
-- **URL:** `http://localhost:8080/worldskills/bibliotech/library_list`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/library_list`
 - **Headers:** Nenhum (sem Authorization)
 - **Body:** Nenhum
 
@@ -284,7 +291,7 @@
 
 ### **Configuração:**
 - **Method:** GET
-- **URL:** `http://localhost:8080/worldskills/bibliotech/comments`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/comments`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
@@ -324,7 +331,7 @@
 
 ### **Configuração:**
 - **Method:** GET
-- **URL:** `http://localhost:8080/worldskills/bibliotech/comments?id_biblioteca=1`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/comments?id_biblioteca=1`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
@@ -364,7 +371,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/worldskills/bibliotech/comments`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/comments`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
@@ -407,7 +414,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/worldskills/bibliotech/comments`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/comments`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
@@ -440,7 +447,7 @@
 
 ### **Configuração:**
 - **Method:** GET
-- **URL:** `http://localhost:8080/worldskills/bibliotech/prints`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/prints`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
@@ -469,7 +476,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/worldskills/bibliotech/prints`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/prints`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
@@ -510,7 +517,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/worldskills/bibliotech/prints`
+- **URL:** `https://bibliotech-api.fly.dev/worldskills/bibliotech/prints`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI

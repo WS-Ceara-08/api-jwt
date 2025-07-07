@@ -183,7 +183,7 @@
 ## 🌐 **DEPLOY E HOSPEDAGEM**
 
 ### **✅ Configuração**
-- [x] **Base URL:** `https://safeedu-api.fly.dev`
+- [x] **Base URL:** `https://bibliotech-api.fly.dev`
 - [x] **Endpoints:** Todos com `/worldskills/bibliotech/`
 - [x] **HTTPS:** Obrigatório em produção
 - [x] **CORS:** Configurado para aplicações web/mobile
@@ -285,12 +285,12 @@ admin@edulib.com / admin2024#
 
 ### **🌐 URL Base**
 ```
-https://safeedu-api.fly.dev/worldskills/bibliotech/
+https://bibliotech-api.fly.dev/worldskills/bibliotech/
 ```
 
 ### **🧪 Teste Rápido**
 ```bash
-curl https://safeedu-api.fly.dev/worldskills/bibliotech/motd
+curl https://bibliotech-api.fly.dev/worldskills/bibliotech/motd
 ```
 
 **🏅 Boa sorte na competição WorldSkills 2025!** 📚

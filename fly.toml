@@ -125,16 +125,12 @@ kill_timeout = "5s"
   # Estratégia de deploy
   strategy = "rolling"        # Deploy gradual (sem downtime)
   
-  # Configurações de release
-  release_command = "echo 'BiblioTech API deploy iniciado'"
-  
 # =============================================================================
 # PROCESSOS
 # =============================================================================
 
-[processes]
-  # Processo principal da aplicação
-  app = "/app/server"
+# Processo principal da aplicação (simplificado)
+# O Dockerfile já define o CMD/ENTRYPOINT
   
 # =============================================================================
 # MÉTRICAS E MONITORING
@@ -144,17 +140,6 @@ kill_timeout = "5s"
   # Habilitar métricas do Fly.io
   port = 9091
   path = "/metrics"
-
-# =============================================================================
-# CONFIGURAÇÕES EXPERIMENTAIS
-# =============================================================================
-
-[experimental]
-  # Habilitar recursos experimentais
-  auto_rollback = true        # Rollback automático em caso de falha
-  enable_consul = false       # Não usar Consul
-  cmd = []                    # Comando customizado (vazio = usar padrão)
-  entrypoint = []             # Entrypoint customizado (vazio = usar padrão)
 
 # =============================================================================
 # CONFIGURAÇÕES DE REGIÃO E SCALING
@@ -238,21 +223,15 @@ kill_timeout = "5s"
 # CONFIGURAÇÕES DE RECURSOS
 # =============================================================================
 
-# Configurações de CPU e memória (opcional - Fly.io auto-detecta)
+# Configurações de CPU e memória (simplificadas)
 [vm]
+  memory = "256mb"
   cpu_kind = "shared"
   cpus = 1
-  memory_mb = 512
 
 # =============================================================================
-# CONFIGURAÇÕES DE REDE
+# CONFIGURAÇÕES DE REDE (SIMPLIFICADAS)
 # =============================================================================
 
-# Configurações de firewall específicas
-[http_service]
-  internal_port = 8080
-  force_https = true
-  auto_stop_machines = "stop"
-  auto_start_machines = true
-  min_machines_running = 1
-  processes = ["app"]
+# As configurações de rede já estão definidas na seção [[services]]
+# Removendo duplicações que podem causar conflitos
