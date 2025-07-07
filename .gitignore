@@ -1,6 +1,6 @@
 # =============================================================================
-# .gitignore - SafeEdu API
-# WorldSkills 2025 - Módulo A2
+# .gitignore - BiblioTech API
+# WorldSkills 2025 - Simulado A2 (30% variação)
 # =============================================================================
 
 # =============================================================================
@@ -21,7 +21,7 @@ out/
 
 # Executáveis compilados
 bin/*.exe
-bin/server_compiled
+bin/bibliotech_server
 *.exe
 *.app
 
@@ -272,7 +272,7 @@ benchmarks/results/
 # ARQUIVOS DE MÍDIA GRANDES
 # =============================================================================
 
-# Imagens grandes
+# Imagens grandes (exceto assets essenciais)
 *.png
 *.jpg
 *.jpeg
@@ -280,7 +280,7 @@ benchmarks/results/
 *.bmp
 *.tiff
 *.svg
-# Exceto assets essenciais
+# Manter assets necessários
 !assets/**
 !docs/images/**
 
@@ -307,11 +307,11 @@ benchmarks/results/
 *.tar.bz2
 
 # =============================================================================
-# ARQUIVOS ESPECÍFICOS DO PROJETO
+# ARQUIVOS ESPECÍFICOS DA BIBLIOTECH
 # =============================================================================
 
-# Backups do projeto
-project_backup/
+# Backups do projeto BiblioTech
+bibliotech_backup/
 *.backup
 
 # Exports de dados
@@ -321,6 +321,10 @@ data_exports/
 # Screenshots de teste
 screenshots/
 test_screenshots/
+
+# Dados de bibliotecas temporários
+temp_libraries/
+library_imports/
 
 # =============================================================================
 # FERRAMENTAS DE CI/CD
@@ -391,6 +395,22 @@ drafts/
 scratch/
 
 # =============================================================================
+# WORLDSKILLS ESPECÍFICOS
+# =============================================================================
+
+# Arquivos de submissão
+submission/
+worldskills_submission/
+
+# Arquivos de avaliação
+evaluation/
+scoring/
+
+# Documentos da prova
+prova_original/
+safeedu_files/
+
+# =============================================================================
 # FINAL
 # =============================================================================
 
@@ -402,3 +422,7 @@ scratch/
 
 # Arquivos que começam com ponto e terminam com .tmp
 .*.tmp
+
+# Arquivos específicos de teste da BiblioTech
+bibliotech_test_*
+test_bibliotech_*

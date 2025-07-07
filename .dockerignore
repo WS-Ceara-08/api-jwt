@@ -1,6 +1,6 @@
 # =============================================================================
-# .dockerignore - SafeEdu API
-# WorldSkills 2025 - Módulo A2
+# .dockerignore - BiblioTech API
+# WorldSkills 2025 - Simulado A2 (30% variação)
 # Otimiza o build do Docker excluindo arquivos desnecessários
 # =============================================================================
 
@@ -31,6 +31,7 @@ LICENSE
 CONTRIBUTING.md
 docs/
 *.md
+!bin/README.md
 
 # Arquivos de ajuda
 HELP.txt
@@ -138,12 +139,13 @@ docker-compose*.yml
 containers/
 
 # =============================================================================
-# SCRIPTS E FERRAMENTAS
+# SCRIPTS E FERRAMENTAS (manter apenas essenciais)
 # =============================================================================
 
-# Scripts de desenvolvimento (manter apenas essenciais)
-scripts/
-!scripts/deploy.sh
+# Scripts de desenvolvimento (manter apenas deploy)
+scripts/*
+!scripts/deploy_bibliotech.sh
+!scripts/test_bibliotech.sh
 
 # Ferramentas de build
 tools/
@@ -168,8 +170,8 @@ private/
 # =============================================================================
 
 # Fly.io (arquivo de config será copiado separadamente)
-config/fly.toml
-fly.toml
+fly.toml.bak
+.fly/
 
 # CI/CD configs
 .github/
@@ -251,11 +253,11 @@ newrelic.ini
 .sentryclirc
 
 # =============================================================================
-# ARQUIVOS ESPECÍFICOS DO PROJETO
+# ARQUIVOS ESPECÍFICOS DA BIBLIOTECH
 # =============================================================================
 
-# Backups do projeto
-project_backup/
+# Backups do projeto BiblioTech
+bibliotech_backup/
 *.backup
 
 # Screenshots
@@ -266,6 +268,10 @@ test_screenshots/
 notes.txt
 TODO.txt
 NOTES.md
+
+# Dados de teste específicos
+test_data/
+mock_libraries/
 
 # =============================================================================
 # OUTROS ARQUIVOS DESNECESSÁRIOS
@@ -286,24 +292,32 @@ empty_dir/
 # INCLUSÕES IMPORTANTES (precedência sobre exclusões)
 # =============================================================================
 
-# Garantir que arquivos essenciais sejam incluídos
+# Garantir que arquivos essenciais da BiblioTech sejam incluídos
 !bin/server.dart
 !pubspec.yaml
 !lib/
 !uploads/.gitkeep
+!fly.toml
 
 # =============================================================================
-# NOTAS IMPORTANTES
+# NOTAS IMPORTANTES PARA BIBLIOTECH
 # =============================================================================
 
 # Este .dockerignore é otimizado para:
-# 1. Reduzir o tamanho do contexto de build
+# 1. Reduzir o tamanho do contexto de build da BiblioTech API
 # 2. Acelerar o processo de build
 # 3. Evitar vazamento de informações sensíveis
 # 4. Manter apenas arquivos essenciais para produção
 
-# Arquivos incluídos no build:
-# - bin/server.dart (código principal)
+# Arquivos incluídos no build da BiblioTech:
+# - bin/server.dart (código principal da API)
 # - pubspec.yaml (dependências)
 # - lib/ (bibliotecas se houver)
 # - uploads/.gitkeep (estrutura de diretório)
+# - fly.toml (configuração de deploy)
+
+# Validações específicas da BiblioTech excluídas do build:
+# - Scripts de teste local
+# - Documentação de desenvolvimento
+# - Dados de mock das bibliotecas
+# - Configurações de IDE

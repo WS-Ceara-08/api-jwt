@@ -1,22 +1,258 @@
-# fly.toml app configuration file generated for safeedu-api on 2025-06-07T20:34:35-03:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
+# fly.toml - Configuração para deploy da BiblioTech API
+# WorldSkills 2025 - Simulado A2 (30% variação)
+# Deploy no Fly.io
 
-app = 'safeedu-api'
-primary_region = 'gru'
+# =============================================================================
+# CONFIGURAÇÕES BÁSICAS DA APLICAÇÃO
+# =============================================================================
+
+# Nome da aplicação (deve ser único no Fly.io)
+app = "bibliotech-api"
+primary_region = "gru"  # São Paulo, Brasil (mais próximo)
+kill_signal = "SIGINT"
+kill_timeout = "5s"
+
+# =============================================================================
+# CONFIGURAÇÕES DE BUILD
+# =============================================================================
 
 [build]
+  # Usar Dockerfile para build
+  dockerfile = "Dockerfile"
+  
+  # Ignorar arquivos durante build
+  ignorefile = ".dockerignore"
 
+# =============================================================================
+# VARIÁVEIS DE AMBIENTE
+# =============================================================================
+
+[env]
+  # Configurações da aplicação
+  PORT = "8080"
+  HOST = "0.0.0.0"
+  ENVIRONMENT = "production"
+  
+  # Identificação da API
+  API_NAME = "BiblioTech"
+  COMPANY = "EduLib"
+  
+  # Configurações de log
+  LOG_LEVEL = "info"
+  
+  # Timezone
+  TZ = "America/Fortaleza"
+  
+  # Configurações específicas da API
+  API_VERSION = "1.0.0"
+  MAX_UPLOAD_SIZE = "5242880"  # 5MB em bytes
+  
+  # CORS settings
+  CORS_ORIGIN = "*"
+  CORS_METHODS = "GET,POST,PUT,DELETE,OPTIONS"
+  
+  # WorldSkills settings
+  WORLDSKILLS_MODULE = "A2"
+  WORLDSKILLS_VARIANT = "bibliotech"
+
+# =============================================================================
+# SERVIÇOS HTTP
+# =============================================================================
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8080
+  processes = ["app"]
+  
+  # Configurações de concorrência
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 50      # Máximo de conexões simultâneas
+    soft_limit = 40      # Limite suave para auto-scaling
+    
+  # Configurações de ports externos
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true   # Redirecionar HTTP para HTTPS
+    
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+    
+  # =============================================================================
+  # HEALTH CHECKS
+  # =============================================================================
+  
+  # TCP Check - Verificação básica de conectividade
+  [[services.tcp_checks]]
+    interval = "15s"      # Verificar a cada 15 segundos
+    timeout = "2s"        # Timeout de 2 segundos
+    grace_period = "10s"  # Período de graça após deploy
+    restart_limit = 0     # Não reiniciar automaticamente por TCP check
+    
+  # HTTP Check - Verificação do endpoint de saúde
+  [[services.http_checks]]
+    interval = "30s"           # Verificar a cada 30 segundos
+    timeout = "5s"             # Timeout de 5 segundos
+    grace_period = "20s"       # Período de graça após deploy
+    restart_limit = 0          # Não reiniciar automaticamente
+    method = "GET"             # Método HTTP
+    path = "/health"           # Endpoint de health check
+    protocol = "http"          # Protocolo
+    tls_skip_verify = false    # Verificar certificado TLS
+    
+    # Headers para o health check
+    [services.http_checks.headers]
+      User-Agent = "Fly-Health-Check"
+      Accept = "application/json"
+
+# =============================================================================
+# VOLUMES (ARMAZENAMENTO PERSISTENTE)
+# =============================================================================
+
+[mounts]
+  # Volume para uploads de arquivos
+  source = "bibliotech_uploads"
+  destination = "/app/uploads"
+  initial_size = "1gb"        # Tamanho inicial de 1GB
+  
+# =============================================================================
+# CONFIGURAÇÕES DE DEPLOY
+# =============================================================================
+
+[deploy]
+  # Estratégia de deploy
+  strategy = "rolling"        # Deploy gradual (sem downtime)
+  
+  # Configurações de release
+  release_command = "echo 'BiblioTech API deploy iniciado'"
+  
+# =============================================================================
+# PROCESSOS
+# =============================================================================
+
+[processes]
+  # Processo principal da aplicação
+  app = "/app/server"
+  
+# =============================================================================
+# MÉTRICAS E MONITORING
+# =============================================================================
+
+[metrics]
+  # Habilitar métricas do Fly.io
+  port = 9091
+  path = "/metrics"
+
+# =============================================================================
+# CONFIGURAÇÕES EXPERIMENTAIS
+# =============================================================================
+
+[experimental]
+  # Habilitar recursos experimentais
+  auto_rollback = true        # Rollback automático em caso de falha
+  enable_consul = false       # Não usar Consul
+  cmd = []                    # Comando customizado (vazio = usar padrão)
+  entrypoint = []             # Entrypoint customizado (vazio = usar padrão)
+
+# =============================================================================
+# CONFIGURAÇÕES DE REGIÃO E SCALING
+# =============================================================================
+
+# Regiões onde a aplicação pode rodar
+# primary_region já definido acima como "gru" (São Paulo)
+
+# Configurações de auto-scaling
+[scaling]
+  min_machines_running = 1    # Mínimo de 1 instância sempre rodando
+  max_machines_running = 3    # Máximo de 3 instâncias (para economia)
+
+# =============================================================================
+# CONFIGURAÇÕES ESPECÍFICAS DA BIBLIOTECH API
+# =============================================================================
+
+# Variáveis específicas do projeto
+[env.bibliotech]
+  # Endpoints base
+  JWT_GENERATE_PATH = "/worldskills/bibliotech/jwt/generate_token"
+  JWT_VALIDATE_PATH = "/worldskills/bibliotech/jwt/validate_token"
+  MOTD_PATH = "/worldskills/bibliotech/motd"
+  LIBRARY_LIST_PATH = "/worldskills/bibliotech/library_list"
+  COMMENTS_PATH = "/worldskills/bibliotech/comments"
+  PRINTS_PATH = "/worldskills/bibliotech/prints"
+  
+  # Configurações de dados
+  DEFAULT_LIBRARIES_COUNT = "5"
+  ORDER_BY = "data_cadastro_desc"
+  
+  # Configurações de segurança
+  PASSWORD_MIN_LENGTH = "8"
+  PASSWORD_REQUIRE_SYMBOLS = "true"
+  JWT_EXPIRATION_HOURS = "24"
+
+# =============================================================================
+# ROTAS PERSONALIZADAS (se necessário)
+# =============================================================================
+
+# Configuração para proxy reverso se necessário
+# [[http_service.http_options.response.headers]]
+#   name = "X-API-Name"
+#   value = "BiblioTech"
+
+# =============================================================================
+# CONFIGURAÇÕES DE LOGS
+# =============================================================================
+
+# Configurações de logging específicas
+[logging]
+  # Nível de log
+  level = "info"
+  
+  # Formato de log
+  format = "json"
+  
+  # Destino dos logs
+  output = ["stdout", "stderr"]
+
+# =============================================================================
+# CONFIGURAÇÕES DE BACKUP (OPCIONAL)
+# =============================================================================
+
+# Configurações de backup do volume (se necessário)
+# [backup]
+#   schedule = "daily"
+#   retention = "7d"
+
+# =============================================================================
+# CONFIGURAÇÕES DE DESENVOLVIMENTO
+# =============================================================================
+
+# Configurações específicas para desenvolvimento (comentadas em produção)
+# [env.development]
+#   LOG_LEVEL = "debug"
+#   JWT_SECRET = "development_secret_key"
+#   CORS_ORIGIN = "http://localhost:3000"
+
+# =============================================================================
+# CONFIGURAÇÕES DE RECURSOS
+# =============================================================================
+
+# Configurações de CPU e memória (opcional - Fly.io auto-detecta)
+[vm]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
+
+# =============================================================================
+# CONFIGURAÇÕES DE REDE
+# =============================================================================
+
+# Configurações de firewall específicas
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = "stop"
   auto_start_machines = true
-  min_machines_running = 0
-  processes = ['app']
-
-[[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
-  cpus = 1
+  min_machines_running = 1
+  processes = ["app"]

@@ -1,5 +1,5 @@
-name: safeedu_api
-description: API SafeEdu para o projeto WorldSkills 2025 - Módulo A2 Desenvolvimento de Aplicativos
+name: bibliotech_api
+description: API BiblioTech para o projeto WorldSkills 2025 - Simulado A2 (30% variação)
 version: 1.0.0+1
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -37,7 +37,7 @@ dev_dependencies:
 
 # Configurações do executável
 executables:
-  safeedu_api: server
+  bibliotech_api: server
 
 # Configurações específicas do projeto
 funding:
@@ -48,16 +48,20 @@ topics:
   - api
   - jwt
   - worldskills
-  - safeedu
+  - bibliotech
+  - edulib
+  - libraries
   - education
   - security
 
 # Screenshots e exemplo de uso
 screenshots:
-  - description: 'API SafeEdu endpoints'
+  - description: 'BiblioTech API endpoints'
     path: docs/api_overview.png
   - description: 'Authentication flow'
     path: docs/auth_flow.png
+  - description: 'Library management system'
+    path: docs/library_system.png
 
 # Plataformas suportadas
 platforms:

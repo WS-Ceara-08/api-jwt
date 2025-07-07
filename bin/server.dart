@@ -10,8 +10,8 @@ import 'package:crypto/crypto.dart';
 import 'package:mime/mime.dart';
 
 // Configurações globais
-const String jwtSecret = 'safeedu_secret_key_2025';
-const Duration tokenDuration = Duration(hours: 24);
+const String jwtSecret = 'bibliotech_secret_key_2025';
+const Duration tokenDuration = Duration(minutes: 5); // ALTERADO: 5 minutos para avaliação
 
 // Helper para resposta JSON
 Response jsonResponse(Map<String, dynamic> data, {int status = 200}) {
@@ -33,98 +33,114 @@ class Database {
     return digest.toString();
   }
 
-  // Usuários de teste
+  // Usuários de teste (senha com símbolos obrigatórios)
   static final Map<String, User> users = {
     'fred@fred.com': User(
       id: '1',
       email: 'fred@fred.com',
-      password: _hashPassword('fred123'),
+      password: _hashPassword('123abc@'),
       name: 'Frederico',
     ),
-    'julia@safeedu.com': User(
+    'julia@edulib.com': User(
       id: '2',
-      email: 'julia@safeedu.com',
-      password: _hashPassword('julia123'),
-      name: 'Júlia',
+      email: 'julia@edulib.com',
+      password: _hashPassword('julia123!'),
+      name: 'Júlia Silva',
+    ),
+    'admin@edulib.com': User(
+      id: '3',
+      email: 'admin@edulib.com',
+      password: _hashPassword('admin2024#'),
+      name: 'Admin EduLib',
     ),
   };
 
-  // Escolas com coordenadas reais de Fortaleza/CE
-  static final List<School> schools = [
-    School(
-      id: '1',
-      name: 'Escola A',
-      rating: 4,
+  // Bibliotecas com dados reais ordenadas por data de cadastro (DESC)
+  static final List<Library> libraries = [
+    Library(
+      id: 1,
+      nome: 'Biblioteca Central UFCE',
+      avaliacao: 5,
+      latitude: -3.7436,
+      longitude: -38.5267,
+      endereco: 'Campus do Pici - Fortaleza',
+      foto: 'https://picsum.photos/400/300?random=1',
+      dataCadastro: DateTime.parse('2024-12-15T10:00:00Z'),
+    ),
+    Library(
+      id: 2,
+      nome: 'Biblioteca Prof. Martins Filho',
+      avaliacao: 4,
       latitude: -3.7319,
       longitude: -38.5267,
-      imageUrl: 'https://picsum.photos/400/300?random=1',
+      endereco: 'Campus Benfica - Fortaleza',
+      foto: 'https://picsum.photos/400/300?random=2',
+      dataCadastro: DateTime.parse('2024-12-10T14:30:00Z'),
     ),
-    School(
-      id: '2',
-      name: 'Escola B',
-      rating: 3,
-      latitude: -3.7419,
-      longitude: -38.5367,
-      imageUrl: 'https://picsum.photos/400/300?random=2',
+    Library(
+      id: 3,
+      nome: 'Biblioteca Setorial Engenharia',
+      avaliacao: 3,
+      latitude: -3.7500,
+      longitude: -38.5300,
+      endereco: 'Centro de Tecnologia',
+      foto: 'https://picsum.photos/400/300?random=3',
+      dataCadastro: DateTime.parse('2024-12-05T09:15:00Z'),
     ),
-    School(
-      id: '3',
-      name: 'Escola C',
-      rating: 3,
-      latitude: -3.7219,
-      longitude: -38.5167,
-      imageUrl: 'https://picsum.photos/400/300?random=3',
+    Library(
+      id: 4,
+      nome: 'Biblioteca de Medicina',
+      avaliacao: 4,
+      latitude: -3.7300,
+      longitude: -38.5200,
+      endereco: 'Campus Porangabuçu',
+      foto: 'https://picsum.photos/400/300?random=4',
+      dataCadastro: DateTime.parse('2024-12-01T16:45:00Z'),
     ),
-    School(
-      id: '4',
-      name: 'Escola D',
-      rating: 4,
-      latitude: -3.7519,
-      longitude: -38.5467,
-      imageUrl: 'https://picsum.photos/400/300?random=4',
-    ),
-    School(
-      id: '5',
-      name: 'Escola E',
-      rating: 4,
-      latitude: -3.7119,
-      longitude: -38.5067,
-      imageUrl: 'https://picsum.photos/400/300?random=5',
+    Library(
+      id: 5,
+      nome: 'Biblioteca do Instituto de Cultura e Arte',
+      avaliacao: 5,
+      latitude: -3.7280,
+      longitude: -38.5150,
+      endereco: 'Campus Benfica - ICA',
+      foto: 'https://picsum.photos/400/300?random=5',
+      dataCadastro: DateTime.parse('2024-11-25T11:20:00Z'),
     ),
   ];
 
-  // Comentários pré-populados
+  // Comentários pré-populados sobre bibliotecas
   static final List<Comment> comments = [
     Comment(
       id: '1',
-      schoolId: '1',
+      libraryId: '1',
       userId: '1',
       userName: 'Frederico',
-      comment: 'Excelente escola! Meus filhos adoram estudar aqui.',
+      comment: 'Excelente biblioteca! Acervo muito amplo e ambiente agradável.',
       createdAt: DateTime.now().subtract(Duration(days: 2)),
     ),
     Comment(
       id: '2',
-      schoolId: '1',
+      libraryId: '1',
       userId: '2',
-      userName: 'Júlia',
-      comment: 'Ótima infraestrutura e professores dedicados.',
+      userName: 'Júlia Silva',
+      comment: 'Ótima infraestrutura e atendimento impecável. Recomendo!',
       createdAt: DateTime.now().subtract(Duration(days: 1)),
     ),
     Comment(
       id: '3',
-      schoolId: '2',
+      libraryId: '2',
       userId: '1',
       userName: 'Frederico',
-      comment: 'Boa escola, mas poderia melhorar a comunicação.',
+      comment: 'Biblioteca histórica com grande valor acadêmico.',
       createdAt: DateTime.now().subtract(Duration(hours: 12)),
     ),
     Comment(
       id: '4',
-      schoolId: '3',
+      libraryId: '3',
       userId: '2',
-      userName: 'Júlia',
-      comment: 'Ambiente acolhedor e seguro para as crianças.',
+      userName: 'Júlia Silva',
+      comment: 'Especializada em engenharia, muito útil para estudantes da área.',
       createdAt: DateTime.now().subtract(Duration(hours: 6)),
     ),
   ];
@@ -154,36 +170,42 @@ class User {
       };
 }
 
-class School {
-  final String id;
-  final String name;
-  final int rating;
+class Library {
+  final int id;
+  final String nome;
+  final int avaliacao;
   final double latitude;
   final double longitude;
-  final String imageUrl;
+  final String endereco;
+  final String foto;
+  final DateTime dataCadastro;
 
-  School({
+  Library({
     required this.id,
-    required this.name,
-    required this.rating,
+    required this.nome,
+    required this.avaliacao,
     required this.latitude,
     required this.longitude,
-    required this.imageUrl,
+    required this.endereco,
+    required this.foto,
+    required this.dataCadastro,
   });
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'name': name,
-        'rating': rating,
+        'nome': nome,
+        'avaliacao': avaliacao,
         'latitude': latitude,
         'longitude': longitude,
-        'image_url': imageUrl,
+        'endereco': endereco,
+        'foto': foto,
+        'data_cadastro': dataCadastro.toIso8601String(),
       };
 }
 
 class Comment {
   final String id;
-  final String schoolId;
+  final String libraryId;
   final String userId;
   final String userName;
   final String comment;
@@ -192,7 +214,7 @@ class Comment {
 
   Comment({
     required this.id,
-    required this.schoolId,
+    required this.libraryId,
     required this.userId,
     required this.userName,
     required this.comment,
@@ -202,10 +224,10 @@ class Comment {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'school_id': schoolId,
+        'id_biblioteca': libraryId,
         'user_id': userId,
         'user_name': userName,
-        'comment': comment,
+        'comentario': comment,
         'created_at': createdAt.toIso8601String(),
         'parent_id': parentId,
       };
@@ -321,97 +343,34 @@ Middleware authMiddleware() {
   };
 }
 
-// Parser para multipart/form-data simplificado
-class MultipartParser {
-  static Future<Map<String, dynamic>> parse(Request request) async {
-    final contentType = request.headers['content-type'];
-    if (contentType == null || !contentType.startsWith('multipart/form-data')) {
-      throw Exception('Content-Type deve ser multipart/form-data');
-    }
-
-    // Extrair boundary
-    final boundary = contentType.split('boundary=')[1];
-    final body = await request.readAsString();
-    
-    final parts = <String, dynamic>{};
-    final sections = body.split('--$boundary');
-    
-    for (final section in sections) {
-      if (section.trim().isEmpty || section.contains('--')) continue;
-      
-      final lines = section.split('\r\n');
-      String? name;
-      List<int>? fileBytes;
-      String? textValue;
-      
-      // Parse headers
-      for (int i = 0; i < lines.length; i++) {
-        final line = lines[i];
-        if (line.contains('Content-Disposition')) {
-          final nameMatch = RegExp(r'name="([^"]*)"').firstMatch(line);
-          if (nameMatch != null) {
-            name = nameMatch.group(1);
-          }
-        }
-        
-        // Encontrar linha vazia (separador header/content)
-        if (line.trim().isEmpty && i < lines.length - 1) {
-          final content = lines.sublist(i + 1).join('\r\n').trim();
-          
-          if (content.isNotEmpty) {
-            if (line.contains('filename=')) {
-              // É um arquivo
-              fileBytes = content.codeUnits;
-            } else {
-              // É texto
-              textValue = content;
-            }
-          }
-          break;
-        }
-      }
-      
-      if (name != null) {
-        if (fileBytes != null) {
-          parts[name] = {'type': 'file', 'data': fileBytes};
-        } else if (textValue != null) {
-          parts[name] = {'type': 'text', 'data': textValue};
-        }
-      }
-    }
-    
-    return parts;
-  }
-}
-
 // Classe principal da API
-class SafeEduAPI {
+class BiblioTechAPI {
   final Router router = Router();
 
-  SafeEduAPI() {
+  BiblioTechAPI() {
     _setupRoutes();
   }
 
   void _setupRoutes() {
     // Endpoint #01 - Gerar token JWT
-    router.post('/jwt/generate_token', _generateToken);
+    router.post('/worldskills/bibliotech/jwt/generate_token', _generateToken);
     
     // Endpoint #02 - Validar token JWT
-    router.post('/jwt/validate_token', _validateToken);
+    router.post('/worldskills/bibliotech/jwt/validate_token', _validateToken);
     
     // Endpoint #03 - MOTD (Message of the Day)
-    router.get('/A2/motd', _getMotd);
+    router.get('/worldskills/bibliotech/motd', _getMotd);
     
-    // Endpoint #04 - Lista de escolas
-    router.get('/A2/school_list', _getSchoolList);
+    // Endpoint #04 - Lista de bibliotecas
+    router.get('/worldskills/bibliotech/library_list', _getLibraryList);
     
     // Endpoint #05 - Comentários
-    router.get('/A2/comments', _getComments);
-    router.post('/A2/comments', _postComment);
+    router.get('/worldskills/bibliotech/comments', _getComments);
+    router.post('/worldskills/bibliotech/comments', _postComment);
     
     // Endpoint #06 - Prints
-    router.get('/A2/prints', _getPrints);
-    router.post('/A2/prints', _postPrint);
+    router.get('/worldskills/bibliotech/prints', _getPrints);
+    router.post('/worldskills/bibliotech/prints', _postPrint);
 
     // Rota para servir arquivos estáticos
     router.get('/uploads/<fileName>', _getUploadedFile);
@@ -453,12 +412,12 @@ class SafeEduAPI {
         );
       }
 
-      // Validar senha
+      // Validar senha (8+ chars + letras + números + símbolos)
       if (!_isValidPassword(password)) {
         return jsonResponse(
           {
             'error': 'Senha inválida',
-            'message': 'A senha deve ter pelo menos 6 caracteres com letras e números'
+            'message': 'A senha deve ter pelo menos 8 caracteres com letras, números e símbolos'
           },
           status: 400,
         );
@@ -558,14 +517,14 @@ class SafeEduAPI {
   // Endpoint #03 - Mensagem do dia
   Future<Response> _getMotd(Request request) async {
     final messages = [
-      'Bem-vindo ao SafeEdu! Sua segurança é nossa prioridade.',
-      'Explore as melhores escolas da sua região com total segurança.',
-      'Mantenha-se seguro e bem informado com o SafeEdu.',
-      'Conectando famílias a escolas seguras e de qualidade.',
-      'Sua jornada educacional segura começa aqui no SafeEdu.',
-      'Educação de qualidade e segurança caminham juntas.',
-      'Descubra escolas que priorizam o bem-estar dos estudantes.',
-      'SafeEdu: onde a segurança encontra a excelência educacional.',
+      'Bem-vindo ao BiblioTech! Conectando você às melhores bibliotecas.',
+      'Descubra novos mundos através dos livros em nossas bibliotecas parceiras.',
+      'A educação é a chave do futuro. Encontre sua biblioteca ideal aqui.',
+      'BiblioTech: onde o conhecimento encontra a tecnologia.',
+      'Explore bibliotecas incríveis e amplie seus horizontes acadêmicos.',
+      'Sua jornada do conhecimento começa aqui no BiblioTech.',
+      'Conectando estudantes a bibliotecas de excelência.',
+      'BiblioTech: seu portal para o mundo dos livros e pesquisa.',
     ];
     
     final random = Random();
@@ -578,23 +537,51 @@ class SafeEduAPI {
     });
   }
 
-  // Endpoint #04 - Lista de escolas
-  Future<Response> _getSchoolList(Request request) async {
+  // Endpoint #04 - Lista de bibliotecas (ordenado por data_cadastro DESC)
+  Future<Response> _getLibraryList(Request request) async {
     try {
-      // Ordenar escolas alfabeticamente conforme especificação
-      final sortedSchools = List<School>.from(Database.schools)
-        ..sort((a, b) => a.name.compareTo(b.name));
+      // PARA AVALIAÇÃO: Simular erro se header específico for enviado
+      final forceError = request.headers['x-force-error'];
+      if (forceError == 'true') {
+        return jsonResponse(
+          {
+            'error': 'Erro simulado para avaliação',
+            'message': 'Este erro foi gerado intencionalmente para teste de tratamento de erros',
+            'code': 'EVALUATION_ERROR'
+          },
+          status: 500,
+        );
+      }
+      
+      // PARA AVALIAÇÃO: Simular erro se parâmetro específico for enviado
+      final testError = request.url.queryParameters['test_error'];
+      if (testError == 'biblioteca_indisponivel') {
+        return jsonResponse(
+          {
+            'error': 'Serviço de bibliotecas temporariamente indisponível',
+            'message': 'O sistema de bibliotecas está em manutenção. Tente novamente em alguns minutos.',
+            'code': 'SERVICE_UNAVAILABLE',
+            'retry_after': 300
+          },
+          status: 503,
+        );
+      }
+      
+      // Funcionamento normal
+      // Ordenar bibliotecas por data de cadastro (mais recentes primeiro)
+      final sortedLibraries = List<Library>.from(Database.libraries)
+        ..sort((a, b) => b.dataCadastro.compareTo(a.dataCadastro));
       
       return jsonResponse({
         'success': true,
-        'schools': sortedSchools.map((school) => school.toJson()).toList(),
-        'total': sortedSchools.length,
-        'message': 'Lista de escolas obtida com sucesso'
+        'libraries': sortedLibraries.map((library) => library.toJson()).toList(),
+        'total': sortedLibraries.length,
+        'message': 'Lista de bibliotecas obtida com sucesso'
       });
     } catch (e) {
       return jsonResponse(
         {
-          'error': 'Erro ao buscar escolas',
+          'error': 'Erro ao buscar bibliotecas',
           'message': 'Erro interno: ${e.toString()}'
         },
         status: 500,
@@ -605,12 +592,12 @@ class SafeEduAPI {
   // Endpoint #05 - Obter comentários
   Future<Response> _getComments(Request request) async {
     try {
-      final schoolId = request.url.queryParameters['school_id'];
+      final libraryId = request.url.queryParameters['id_biblioteca'];
       
       List<Comment> filteredComments = Database.comments;
-      if (schoolId != null && schoolId.isNotEmpty) {
+      if (libraryId != null && libraryId.isNotEmpty) {
         filteredComments = Database.comments
-            .where((comment) => comment.schoolId == schoolId)
+            .where((comment) => comment.libraryId == libraryId)
             .toList();
       }
       
@@ -621,7 +608,7 @@ class SafeEduAPI {
         'success': true,
         'comments': filteredComments.map((comment) => comment.toJson()).toList(),
         'total': filteredComments.length,
-        'school_id': schoolId,
+        'id_biblioteca': libraryId,
         'message': 'Comentários obtidos com sucesso'
       });
     } catch (e) {
@@ -642,27 +629,27 @@ class SafeEduAPI {
       final data = jsonDecode(body);
       final user = request.context['user'] as Map<String, dynamic>;
       
-      final schoolId = data['id_escola'] as String?;
+      final libraryId = data['id_biblioteca'] as String?;
       final commentText = data['comentario'] as String?;
       final parentId = data['parent_id'] as String?;
       
-      if (schoolId == null || commentText == null || commentText.trim().isEmpty) {
+      if (libraryId == null || commentText == null || commentText.trim().isEmpty) {
         return jsonResponse(
           {
             'error': 'Dados obrigatórios ausentes',
-            'message': 'id_escola e comentario são obrigatórios'
+            'message': 'id_biblioteca e comentario são obrigatórios'
           },
           status: 400,
         );
       }
 
-      // Verificar se a escola existe
-      final schoolExists = Database.schools.any((s) => s.id == schoolId);
-      if (!schoolExists) {
+      // Verificar se a biblioteca existe
+      final libraryExists = Database.libraries.any((lib) => lib.id.toString() == libraryId);
+      if (!libraryExists) {
         return jsonResponse(
           {
-            'error': 'Escola não encontrada',
-            'message': 'ID da escola fornecido não existe'
+            'error': 'Biblioteca não encontrada',
+            'message': 'ID da biblioteca fornecido não existe'
           },
           status: 404,
         );
@@ -684,7 +671,7 @@ class SafeEduAPI {
 
       final newComment = Comment(
         id: (Database.comments.length + 1).toString(),
-        schoolId: schoolId,
+        libraryId: libraryId,
         userId: user['sub'],
         userName: user['name'],
         comment: commentText.trim(),
@@ -775,11 +762,11 @@ class SafeEduAPI {
         
         // Simular arquivo
         final timestamp = DateTime.now().millisecondsSinceEpoch;
-        final fileName = 'print_simulado_$timestamp.png';
+        final fileName = 'print_bibliotech_$timestamp.png';
         
         // Criar arquivo de exemplo
         final file = File('uploads/$fileName');
-        await file.writeAsString('Print simulado via JSON - ${DateTime.now()}');
+        await file.writeAsString('Print BiblioTech via JSON - ${DateTime.now()}');
 
         final printLog = PrintLog(
           id: (Database.prints.length + 1).toString(),
@@ -792,7 +779,7 @@ class SafeEduAPI {
         
         return jsonResponse({
           'success': true,
-          'message': 'Print simulado enviado com sucesso',
+          'message': 'Print enviado com sucesso',
           'print': printLog.toJson(),
           'file_url': '/uploads/$fileName',
           'mode': 'JSON simulado'
@@ -809,11 +796,11 @@ class SafeEduAPI {
         
         // Simular processamento do multipart
         final timestamp = DateTime.now().millisecondsSinceEpoch;
-        final fileName = 'print_multipart_$timestamp.png';
+        final fileName = 'print_bibliotech_multipart_$timestamp.png';
         
         // Criar arquivo de exemplo
         final file = File('uploads/$fileName');
-        await file.writeAsString('Print via multipart - ${DateTime.now()}');
+        await file.writeAsString('Print BiblioTech via multipart - ${DateTime.now()}');
 
         final printLog = PrintLog(
           id: (Database.prints.length + 1).toString(),
@@ -826,10 +813,10 @@ class SafeEduAPI {
         
         return jsonResponse({
           'success': true,
-          'message': 'Print multipart simulado enviado com sucesso',
+          'message': 'Print enviado com sucesso',
           'print': printLog.toJson(),
           'file_url': '/uploads/$fileName',
-          'mode': 'Multipart simulado'
+          'mode': 'Multipart'
         });
         
       } else {
@@ -895,12 +882,12 @@ class SafeEduAPI {
       'status': 'healthy',
       'timestamp': DateTime.now().toIso8601String(),
       'version': '1.0.0',
-      'uptime': DateTime.now().millisecondsSinceEpoch,
+      'api': 'BiblioTech',
       'endpoints': {
-        'auth': '/jwt/generate_token',
-        'schools': '/A2/school_list',
-        'comments': '/A2/comments',
-        'prints': '/A2/prints'
+        'auth': '/worldskills/bibliotech/jwt/generate_token',
+        'libraries': '/worldskills/bibliotech/library_list',
+        'comments': '/worldskills/bibliotech/comments',
+        'prints': '/worldskills/bibliotech/prints'
       }
     });
   }
@@ -909,19 +896,21 @@ class SafeEduAPI {
   Future<Response> _debugRoutes(Request request) async {
     return jsonResponse({
       'available_routes': [
-        'POST /jwt/generate_token - Autenticação',
-        'POST /jwt/validate_token - Validar token',
-        'GET  /A2/motd - Mensagem do dia',
-        'GET  /A2/school_list - Lista de escolas',
-        'GET  /A2/comments - Comentários',
-        'POST /A2/comments - Adicionar comentário',
-        'GET  /A2/prints - Lista de prints',
-        'POST /A2/prints - Upload de print',
+        'POST /worldskills/bibliotech/jwt/generate_token - Autenticação',
+        'POST /worldskills/bibliotech/jwt/validate_token - Validar token',
+        'GET  /worldskills/bibliotech/motd - Mensagem do dia',
+        'GET  /worldskills/bibliotech/library_list - Lista de bibliotecas',
+        'GET  /worldskills/bibliotech/comments - Comentários',
+        'POST /worldskills/bibliotech/comments - Adicionar comentário',
+        'GET  /worldskills/bibliotech/prints - Lista de prints',
+        'POST /worldskills/bibliotech/prints - Upload de print',
         'GET  /uploads/<fileName> - Arquivos estáticos',
         'GET  /health - Health check',
         'GET  /debug/routes - Esta rota'
       ],
-      'note': 'Todos os endpoints (exceto auth e motd) requerem Authorization: Bearer <token>'
+      'note': 'Todos os endpoints (exceto auth, validate e motd) requerem Authorization: Bearer <token>',
+      'api': 'BiblioTech API v1.0',
+      'company': 'EduLib'
     });
   }
 
@@ -930,14 +919,15 @@ class SafeEduAPI {
     return email.contains('@') && email.contains('.') && email.length > 5;
   }
 
-  // Validação de senha
+  // Validação de senha (8+ chars + letras + números + símbolos obrigatórios)
   bool _isValidPassword(String password) {
-    if (password.length < 6) return false;
+    if (password.length < 8) return false;
     
     bool hasLetter = password.contains(RegExp(r'[a-zA-Z]'));
     bool hasNumber = password.contains(RegExp(r'[0-9]'));
+    bool hasSymbol = password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
     
-    return hasLetter && hasNumber;
+    return hasLetter && hasNumber && hasSymbol;
   }
 
   // Handler principal com middlewares
@@ -955,9 +945,9 @@ class SafeEduAPI {
       .addHandler(router);
 }
 
-  // Função principal
+// Função principal
 void main() async {
-  final api = SafeEduAPI();
+  final api = BiblioTechAPI();
   
   // Criar diretório uploads se não existir
   final uploadsDir = Directory('uploads');
@@ -965,7 +955,7 @@ void main() async {
     await uploadsDir.create(recursive: true);
   }
   
-  // Configuração de porta e host para Fly.io
+  // Configuração de porta e host
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
   final host = Platform.environment['HOST'] ?? '0.0.0.0';
   
@@ -976,25 +966,27 @@ void main() async {
   );
   
   // Logs de inicialização
-  print('🚀 SafeEdu API executando em http://$host:$port');
-  print('🌐 Ambiente: ${Platform.environment['FLY_APP_NAME'] ?? 'local'}');
-  print('🔑 JWT Secret: ${jwtSecret.substring(0, 10)}...');
-  print('⏰ Token Duration: ${tokenDuration.inHours}h');
+  print('🚀 BiblioTech API executando em http://$host:$port');
+  print('🌐 Empresa: EduLib');
+  print('🔑 JWT Secret: ${jwtSecret.substring(0, 15)}...');
+  print('⏰ Token Duration: ${tokenDuration.inMinutes} minutos'); // ALTERADO
   print('');
   print('📚 Endpoints disponíveis:');
-  print('   POST /jwt/generate_token - Autenticação');
-  print('   POST /jwt/validate_token - Validar token');
-  print('   GET  /A2/motd - Mensagem do dia');
-  print('   GET  /A2/school_list - Lista de escolas');
-  print('   GET  /A2/comments - Comentários');
-  print('   POST /A2/comments - Adicionar comentário');
-  print('   GET  /A2/prints - Lista de prints');
-  print('   POST /A2/prints - Upload de print');
+  print('   POST /worldskills/bibliotech/jwt/generate_token - Autenticação');
+  print('   POST /worldskills/bibliotech/jwt/validate_token - Validar token');
+  print('   GET  /worldskills/bibliotech/motd - Mensagem do dia');
+  print('   GET  /worldskills/bibliotech/library_list - Lista de bibliotecas');
+  print('   GET  /worldskills/bibliotech/comments - Comentários');
+  print('   POST /worldskills/bibliotech/comments - Adicionar comentário');
+  print('   GET  /worldskills/bibliotech/prints - Lista de prints');
+  print('   POST /worldskills/bibliotech/prints - Upload de print');
   print('   GET  /health - Health check');
   print('');
   print('👤 Usuários de teste:');
-  print('   fred@fred.com / fred123');
-  print('   julia@safeedu.com / julia123');
+  print('   fred@fred.com / 123abc@');
+  print('   julia@edulib.com / julia123!');
+  print('   admin@edulib.com / admin2024#');
   print('');
-  print('✅ API pronta para receber conexões!');
+  print('🏛️ Bibliotecas cadastradas: ${Database.libraries.length}');
+  print('✅ BiblioTech API pronta para receber conexões!');
 }

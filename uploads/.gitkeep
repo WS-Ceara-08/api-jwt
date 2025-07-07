@@ -1,0 +1,17 @@
+# BiblioTech API - Diretório de Uploads
+# 
+# Este arquivo mantém o diretório uploads/ no controle de versão.
+# 
+# Arquivos que serão armazenados aqui:
+# - Screenshots/prints enviados pelos usuários
+# - Imagens de bibliotecas (se necessário)
+# - Arquivos temporários de upload
+# 
+# Estrutura esperada:
+# uploads/
+# ├── .gitkeep (este arquivo)
+# ├── print_bibliotech_*.png
+# ├── print_bibliotech_multipart_*.png
+# └── outros arquivos enviados pelos usuários
+# 
+# Nota: Este diretório é ignorado pelo .gitignore exceto por este arquivo .gitkeep

@@ -1,5 +1,5 @@
-# Dockerfile otimizado para API SafeEdu
-# WorldSkills 2025 - Módulo A2
+# Dockerfile otimizado para BiblioTech API
+# WorldSkills 2025 - Simulado A2 (30% variação)
 # Multi-stage build para reduzir tamanho final
 
 # =============================================================================
@@ -8,9 +8,9 @@
 FROM dart:stable AS build
 
 # Labels para metadados
-LABEL maintainer="SafeEdu API Team"
+LABEL maintainer="EduLib BiblioTech Team"
 LABEL version="1.0.0"
-LABEL description="API SafeEdu para WorldSkills 2025"
+LABEL description="API BiblioTech para WorldSkills 2025 - Simulado"
 
 # Definir variáveis de ambiente para build
 ENV DART_SDK=/usr/lib/dart
@@ -29,17 +29,17 @@ RUN dart pub get
 COPY . .
 
 # Verificar estrutura do projeto
-RUN echo "=== Estrutura do projeto ===" && \
+RUN echo "=== Estrutura do projeto BiblioTech ===" && \
     find . -type f -name "*.dart" -o -name "*.yaml" | head -20
 
 # Verificar se o arquivo principal existe
 RUN test -f bin/server.dart || (echo "ERROR: bin/server.dart não encontrado!" && exit 1)
 
 # Compilar aplicação para executável nativo otimizado
-RUN dart compile exe bin/server.dart -o bin/server_compiled
+RUN dart compile exe bin/server.dart -o bin/bibliotech_server
 
 # Verificar se compilação foi bem-sucedida
-RUN test -f bin/server_compiled || (echo "ERROR: Compilação falhou!" && exit 1)
+RUN test -f bin/bibliotech_server || (echo "ERROR: Compilação falhou!" && exit 1)
 
 # =============================================================================
 # STAGE 2: Imagem de produção mínima
@@ -60,14 +60,14 @@ ENV TZ=America/Fortaleza
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Criar grupo e usuário para segurança (não-root)
-RUN groupadd -r safeedu && \
-    useradd -r -g safeedu -d /app -s /bin/false safeedu
+RUN groupadd -r bibliotech && \
+    useradd -r -g bibliotech -d /app -s /bin/false bibliotech
 
 # Definir diretório de trabalho
 WORKDIR /app
 
 # Copiar executável compilado do stage de build
-COPY --from=build /app/bin/server_compiled /app/server
+COPY --from=build /app/bin/bibliotech_server /app/server
 
 # Copiar arquivos de configuração necessários
 COPY --from=build /app/pubspec.yaml /app/
@@ -76,16 +76,18 @@ COPY --from=build /app/pubspec.yaml /app/
 RUN mkdir -p /app/uploads /app/logs
 
 # Configurar permissões corretas
-RUN chown -R safeedu:safeedu /app && \
+RUN chown -R bibliotech:bibliotech /app && \
     chmod +x /app/server && \
     chmod 755 /app/uploads && \
     chmod 755 /app/logs
 
 # Criar arquivo de configuração de logs
-RUN echo "logs_directory=/app/logs" > /app/config.txt
+RUN echo "logs_directory=/app/logs" > /app/config.txt && \
+    echo "api_name=BiblioTech" >> /app/config.txt && \
+    echo "company=EduLib" >> /app/config.txt
 
 # Mudar para usuário não-root (segurança)
-USER safeedu
+USER bibliotech
 
 # Expor porta da aplicação
 EXPOSE 8080
@@ -94,8 +96,10 @@ EXPOSE 8080
 ENV PORT=8080
 ENV HOST=0.0.0.0
 ENV ENVIRONMENT=production
-ENV JWT_SECRET=safeedu_secret_key_2025
+ENV JWT_SECRET=bibliotech_secret_key_2025
 ENV LOG_LEVEL=info
+ENV API_NAME=BiblioTech
+ENV COMPANY=EduLib
 
 # Health check para monitoramento
 HEALTHCHECK --interval=30s \
@@ -115,14 +119,14 @@ CMD []
 # =============================================================================
 
 # Adicionar labels para melhor organização
-LABEL org.opencontainers.image.title="SafeEdu API"
-LABEL org.opencontainers.image.description="API para aplicativo SafeEdu - WorldSkills 2025"
+LABEL org.opencontainers.image.title="BiblioTech API"
+LABEL org.opencontainers.image.description="API para aplicativo BiblioTech - WorldSkills 2025 Simulado"
 LABEL org.opencontainers.image.version="1.0.0"
-LABEL org.opencontainers.image.created="2025-06-07"
-LABEL org.opencontainers.image.authors="WorldSkills Team"
-LABEL org.opencontainers.image.url="https://safeedu-api.fly.dev"
-LABEL org.opencontainers.image.documentation="https://github.com/safeedu/api/blob/main/README.md"
-LABEL org.opencontainers.image.source="https://github.com/safeedu/api"
+LABEL org.opencontainers.image.created="2025-07-07"
+LABEL org.opencontainers.image.authors="WorldSkills Team - EduLib"
+LABEL org.opencontainers.image.url="https://workspace.dinizeotecnologia.com.br"
+LABEL org.opencontainers.image.documentation="README.md"
+LABEL org.opencontainers.image.source="https://github.com/edulib/bibliotech-api"
 LABEL org.opencontainers.image.licenses="MIT"
 
 # Informações sobre portas e volumes
@@ -136,3 +140,5 @@ LABEL env.HOST="Host do servidor (padrão: 0.0.0.0)"
 LABEL env.JWT_SECRET="Chave secreta para JWT"
 LABEL env.ENVIRONMENT="Ambiente de execução (development/production)"
 LABEL env.LOG_LEVEL="Nível de log (debug/info/warn/error)"
+LABEL env.API_NAME="Nome da API (BiblioTech)"
+LABEL env.COMPANY="Nome da empresa (EduLib)"
