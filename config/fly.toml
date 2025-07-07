@@ -1,12 +1,13 @@
-# fly.toml - Configuração para deploy no Fly.io
-# SafeEdu API - WorldSkills 2025
+# fly.toml - Configuração para deploy da BiblioTech API
+# WorldSkills 2025 - Simulado A2 (30% variação)
+# Deploy no Fly.io
 
 # =============================================================================
 # CONFIGURAÇÕES BÁSICAS DA APLICAÇÃO
 # =============================================================================
 
 # Nome da aplicação (deve ser único no Fly.io)
-app = "safeedu-api"
+app = "bibliotech-api"
 primary_region = "gru"  # São Paulo, Brasil (mais próximo)
 kill_signal = "SIGINT"
 kill_timeout = "5s"
@@ -32,6 +33,10 @@ kill_timeout = "5s"
   HOST = "0.0.0.0"
   ENVIRONMENT = "production"
   
+  # Identificação da API
+  API_NAME = "BiblioTech"
+  COMPANY = "EduLib"
+  
   # Configurações de log
   LOG_LEVEL = "info"
   
@@ -45,6 +50,10 @@ kill_timeout = "5s"
   # CORS settings
   CORS_ORIGIN = "*"
   CORS_METHODS = "GET,POST,PUT,DELETE,OPTIONS"
+  
+  # WorldSkills settings
+  WORLDSKILLS_MODULE = "A2"
+  WORLDSKILLS_VARIANT = "bibliotech"
 
 # =============================================================================
 # SERVIÇOS HTTP
@@ -104,7 +113,7 @@ kill_timeout = "5s"
 
 [mounts]
   # Volume para uploads de arquivos
-  source = "safeedu_uploads"
+  source = "bibliotech_uploads"
   destination = "/app/uploads"
   initial_size = "1gb"        # Tamanho inicial de 1GB
   
@@ -117,7 +126,7 @@ kill_timeout = "5s"
   strategy = "rolling"        # Deploy gradual (sem downtime)
   
   # Configurações de release
-  release_command = "echo 'SafeEdu API deploy iniciado'"
+  release_command = "echo 'BiblioTech API deploy iniciado'"
   
 # =============================================================================
 # PROCESSOS
@@ -148,23 +157,6 @@ kill_timeout = "5s"
   entrypoint = []             # Entrypoint customizado (vazio = usar padrão)
 
 # =============================================================================
-# CONFIGURAÇÕES DE REDE
-# =============================================================================
-
-# Configurações de firewall (se necessário)
-# [[statics]]
-#   guest_path = "/app/uploads"
-#   url_prefix = "/uploads"
-
-# =============================================================================
-# SECRETS (CONFIGURADO VIA CLI)
-# =============================================================================
-
-# Os secrets são configurados via CLI com comandos:
-# fly secrets set JWT_SECRET="sua_chave_jwt_super_secreta"
-# fly secrets set DATABASE_URL="postgresql://..." (se usar banco)
-
-# =============================================================================
 # CONFIGURAÇÕES DE REGIÃO E SCALING
 # =============================================================================
 
@@ -175,6 +167,53 @@ kill_timeout = "5s"
 [scaling]
   min_machines_running = 1    # Mínimo de 1 instância sempre rodando
   max_machines_running = 3    # Máximo de 3 instâncias (para economia)
+
+# =============================================================================
+# CONFIGURAÇÕES ESPECÍFICAS DA BIBLIOTECH API
+# =============================================================================
+
+# Variáveis específicas do projeto
+[env.bibliotech]
+  # Endpoints base
+  JWT_GENERATE_PATH = "/worldskills/bibliotech/jwt/generate_token"
+  JWT_VALIDATE_PATH = "/worldskills/bibliotech/jwt/validate_token"
+  MOTD_PATH = "/worldskills/bibliotech/motd"
+  LIBRARY_LIST_PATH = "/worldskills/bibliotech/library_list"
+  COMMENTS_PATH = "/worldskills/bibliotech/comments"
+  PRINTS_PATH = "/worldskills/bibliotech/prints"
+  
+  # Configurações de dados
+  DEFAULT_LIBRARIES_COUNT = "5"
+  ORDER_BY = "data_cadastro_desc"
+  
+  # Configurações de segurança
+  PASSWORD_MIN_LENGTH = "8"
+  PASSWORD_REQUIRE_SYMBOLS = "true"
+  JWT_EXPIRATION_HOURS = "24"
+
+# =============================================================================
+# ROTAS PERSONALIZADAS (se necessário)
+# =============================================================================
+
+# Configuração para proxy reverso se necessário
+# [[http_service.http_options.response.headers]]
+#   name = "X-API-Name"
+#   value = "BiblioTech"
+
+# =============================================================================
+# CONFIGURAÇÕES DE LOGS
+# =============================================================================
+
+# Configurações de logging específicas
+[logging]
+  # Nível de log
+  level = "info"
+  
+  # Formato de log
+  format = "json"
+  
+  # Destino dos logs
+  output = ["stdout", "stderr"]
 
 # =============================================================================
 # CONFIGURAÇÕES DE BACKUP (OPCIONAL)
@@ -193,36 +232,27 @@ kill_timeout = "5s"
 # [env.development]
 #   LOG_LEVEL = "debug"
 #   JWT_SECRET = "development_secret_key"
+#   CORS_ORIGIN = "http://localhost:3000"
 
 # =============================================================================
 # CONFIGURAÇÕES DE RECURSOS
 # =============================================================================
 
 # Configurações de CPU e memória (opcional - Fly.io auto-detecta)
-# [vm]
-#   cpu_kind = "shared"
-#   cpus = 1
-#   memory_mb = 256
+[vm]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
 
 # =============================================================================
-# NOTAS IMPORTANTES
+# CONFIGURAÇÕES DE REDE
 # =============================================================================
 
-# 1. Substitua "safeedu-api" por um nome único se necessário
-# 2. Configure secrets via CLI: fly secrets set JWT_SECRET="sua_chave"
-# 3. Crie o volume antes do deploy: fly volumes create safeedu_uploads --region gru --size 1
-# 4. Para múltiplas regiões, adicione: fly scale count 2 --region gru,iad
-# 5. Monitor via: fly dashboard, fly logs, fly status
-
-# =============================================================================
-# COMANDOS ÚTEIS
-# =============================================================================
-
-# Deploy:          fly deploy
-# Status:          fly status
-# Logs:            fly logs
-# SSH:             fly ssh console
-# Scale:           fly scale count 2
-# Secrets:         fly secrets list
-# Dashboard:       fly dashboard
-# Restart:         fly restart
+# Configurações de firewall específicas
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]

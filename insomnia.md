@@ -1,4 +1,4 @@
-# 🧪 Teste Passo a Passo - SafeEdu API
+# 🧪 Teste Passo a Passo - BiblioTech API
 
 ## 📋 **Checklist de Testes**
 
@@ -19,19 +19,21 @@
 ```json
 {
   "available_routes": [
-    "POST /jwt/generate_token - Autenticação",
-    "POST /jwt/validate_token - Validar token",
-    "GET  /A2/motd - Mensagem do dia",
-    "GET  /A2/school_list - Lista de escolas",
-    "GET  /A2/comments - Comentários",
-    "POST /A2/comments - Adicionar comentário",
-    "GET  /A2/prints - Lista de prints",
-    "POST /A2/prints - Upload de print",
+    "POST /worldskills/bibliotech/jwt/generate_token - Autenticação",
+    "POST /worldskills/bibliotech/jwt/validate_token - Validar token",
+    "GET  /worldskills/bibliotech/motd - Mensagem do dia",
+    "GET  /worldskills/bibliotech/library_list - Lista de bibliotecas",
+    "GET  /worldskills/bibliotech/comments - Comentários",
+    "POST /worldskills/bibliotech/comments - Adicionar comentário",
+    "GET  /worldskills/bibliotech/prints - Lista de prints",
+    "POST /worldskills/bibliotech/prints - Upload de print",
     "GET  /uploads/<fileName> - Arquivos estáticos",
     "GET  /health - Health check",
     "GET  /debug/routes - Esta rota"
   ],
-  "note": "Todos os endpoints (exceto auth e motd) requerem Authorization: Bearer <token>"
+  "note": "Todos os endpoints (exceto auth, validate e motd) requerem Authorization: Bearer <token>",
+  "api": "BiblioTech API v1.0",
+  "company": "EduLib"
 }
 ```
 
@@ -46,7 +48,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/jwt/generate_token`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/jwt/generate_token`
 - **Headers:** 
   ```
   Content-Type: application/json
@@ -55,7 +57,7 @@
   ```json
   {
     "email": "fred@fred.com",
-    "password": "fred123"
+    "password": "123abc@"
   }
   ```
 
@@ -69,7 +71,7 @@
     "email": "fred@fred.com",
     "name": "Frederico"
   },
-  "expires_in": 86400,
+  "expires_in": 300,
   "message": "Login realizado com sucesso"
 }
 ```
@@ -86,7 +88,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/jwt/generate_token`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/jwt/generate_token`
 - **Headers:** 
   ```
   Content-Type: application/json
@@ -94,8 +96,8 @@
 - **Body (JSON):**
   ```json
   {
-    "email": "julia@safeedu.com",
-    "password": "123456"
+    "email": "julia@edulib.com",
+    "password": "julia123!"
   }
   ```
 
@@ -106,10 +108,10 @@
   "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
   "user": {
     "id": "2",
-    "email": "julia@safeedu.com",
-    "name": "Júlia"
+    "email": "julia@edulib.com",
+    "name": "Júlia Silva"
   },
-  "expires_in": 86400,
+  "expires_in": 300,
   "message": "Login realizado com sucesso"
 }
 ```
@@ -125,7 +127,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/jwt/generate_token`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/jwt/generate_token`
 - **Headers:** 
   ```
   Content-Type: application/json
@@ -157,7 +159,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/jwt/validate_token`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/jwt/validate_token`
 - **Headers:** 
   ```
   Content-Type: application/json
@@ -178,7 +180,7 @@
     "email": "fred@fred.com",
     "name": "Frederico"
   },
-  "expires_at": "2025-06-08T20:10:00.000Z",
+  "expires_at": "2025-07-07T20:10:00.000Z",
   "message": "Token válido"
 }
 ```
@@ -194,15 +196,15 @@
 
 ### **Configuração:**
 - **Method:** GET
-- **URL:** `http://localhost:8080/A2/motd`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/motd`
 - **Headers:** Nenhum necessário
 - **Body:** Nenhum
 
 ### **Resultado Esperado:**
 ```json
 {
-  "message": "Bem-vindo ao SafeEdu! Sua segurança é nossa prioridade.",
-  "timestamp": "2025-06-07T20:15:00.000Z",
+  "message": "Bem-vindo ao BiblioTech! Conectando você às melhores bibliotecas.",
+  "timestamp": "2025-07-07T20:15:00.000Z",
   "version": "1.0.0"
 }
 ```
@@ -215,11 +217,11 @@
 
 ---
 
-## 🏫 **Rota 8: Lista de Escolas**
+## �️ **Rota 8: Lista de Bibliotecas**
 
 ### **Configuração:**
 - **Method:** GET
-- **URL:** `http://localhost:8080/A2/school_list`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/library_list`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
@@ -230,42 +232,36 @@
 ```json
 {
   "success": true,
-  "schools": [
+  "libraries": [
     {
-      "id": "1",
-      "name": "Escola A",
-      "rating": 4,
-      "latitude": -3.7319,
+      "id": 1,
+      "nome": "Biblioteca Central UFCE",
+      "avaliacao": 5,
+      "latitude": -3.7436,
       "longitude": -38.5267,
-      "image_url": "https://picsum.photos/400/300?random=1"
-    },
-    {
-      "id": "2",
-      "name": "Escola B",
-      "rating": 3,
-      "latitude": -3.7419,
-      "longitude": -38.5367,
-      "image_url": "https://picsum.photos/400/300?random=2"
+      "endereco": "Campus do Pici - Fortaleza",
+      "foto": "https://picsum.photos/400/300?random=1",
+      "data_cadastro": "2024-12-15T10:00:00.000Z"
     }
   ],
   "total": 5,
-  "message": "Lista de escolas obtida com sucesso"
+  "message": "Lista de bibliotecas obtida com sucesso"
 }
 ```
 
 ### **✅ Status da Rota 8:**
 - [ ] **TESTE:** Executar no Insomnia
 - [ ] **RESULTADO:** Status 200 ✅ / Erro ❌
-- [ ] **TOTAL ESCOLAS:** _______________
+- [ ] **TOTAL BIBLIOTECAS:** _______________
 - [ ] **OBSERVAÇÕES:** _______________
 
 ---
 
-## 🚫 **Rota 9: Escolas Sem Token (Teste de Erro)**
+## 🚫 **Rota 9: Bibliotecas Sem Token (Teste de Erro)**
 
 ### **Configuração:**
 - **Method:** GET
-- **URL:** `http://localhost:8080/A2/school_list`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/library_list`
 - **Headers:** Nenhum (sem Authorization)
 - **Body:** Nenhum
 
@@ -288,7 +284,7 @@
 
 ### **Configuração:**
 - **Method:** GET
-- **URL:** `http://localhost:8080/A2/comments`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/comments`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
@@ -302,16 +298,16 @@
   "comments": [
     {
       "id": "1",
-      "school_id": "1",
+      "id_biblioteca": "1",
       "user_id": "1",
       "user_name": "Frederico",
-      "comment": "Excelente escola! Meus filhos adoram estudar aqui.",
-      "created_at": "2025-06-05T12:00:00.000Z",
+      "comentario": "Excelente biblioteca! Acervo muito amplo e ambiente agradável.",
+      "created_at": "2025-07-05T12:00:00.000Z",
       "parent_id": null
     }
   ],
   "total": 4,
-  "school_id": null,
+  "id_biblioteca": null,
   "message": "Comentários obtidos com sucesso"
 }
 ```
@@ -324,11 +320,11 @@
 
 ---
 
-## 💬 **Rota 11: Comentários por Escola**
+## 💬 **Rota 11: Comentários por Biblioteca**
 
 ### **Configuração:**
 - **Method:** GET
-- **URL:** `http://localhost:8080/A2/comments?school_id=1`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/comments?id_biblioteca=1`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
@@ -342,16 +338,16 @@
   "comments": [
     {
       "id": "1",
-      "school_id": "1",
+      "id_biblioteca": "1",
       "user_id": "1",
       "user_name": "Frederico",
-      "comment": "Excelente escola! Meus filhos adoram estudar aqui.",
-      "created_at": "2025-06-05T12:00:00.000Z",
+      "comentario": "Excelente biblioteca! Acervo muito amplo e ambiente agradável.",
+      "created_at": "2025-07-05T12:00:00.000Z",
       "parent_id": null
     }
   ],
   "total": 2,
-  "school_id": "1",
+  "id_biblioteca": "1",
   "message": "Comentários obtidos com sucesso"
 }
 ```
@@ -359,7 +355,7 @@
 ### **✅ Status da Rota 11:**
 - [ ] **TESTE:** Executar no Insomnia
 - [ ] **RESULTADO:** Status 200 ✅ / Erro ❌
-- [ ] **COMENTÁRIOS DA ESCOLA 1:** _______________
+- [ ] **COMENTÁRIOS DA BIBLIOTECA 1:** _______________
 - [ ] **OBSERVAÇÕES:** _______________
 
 ---
@@ -368,7 +364,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/A2/comments`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/comments`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
@@ -377,8 +373,8 @@
 - **Body (JSON):**
   ```json
   {
-    "id_escola": "1",
-    "comentario": "Comentário de teste via Insomnia! Escola muito boa."
+    "id_biblioteca": "1",
+    "comentario": "Comentário de teste via Insomnia! Biblioteca muito boa."
   }
   ```
 
@@ -389,11 +385,11 @@
   "message": "Comentário adicionado com sucesso",
   "comment": {
     "id": "5",
-    "school_id": "1",
+    "id_biblioteca": "1",
     "user_id": "1",
     "user_name": "Frederico",
-    "comment": "Comentário de teste via Insomnia! Escola muito boa.",
-    "created_at": "2025-06-07T20:20:00.000Z",
+    "comentario": "Comentário de teste via Insomnia! Biblioteca muito boa.",
+    "created_at": "2025-07-07T20:20:00.000Z",
     "parent_id": null
   }
 }
@@ -411,7 +407,7 @@
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/A2/comments`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/comments`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
@@ -420,7 +416,7 @@
 - **Body (JSON):**
   ```json
   {
-    "id_escola": "999",
+    "id_biblioteca": "999",
     "comentario": ""
   }
   ```
@@ -429,7 +425,7 @@
 ```json
 {
   "error": "Dados obrigatórios ausentes",
-  "message": "id_escola e comentario são obrigatórios"
+  "message": "id_biblioteca e comentario são obrigatórios"
 }
 ```
 
@@ -444,7 +440,7 @@
 
 ### **Configuração:**
 - **Method:** GET
-- **URL:** `http://localhost:8080/A2/prints`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/prints`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
@@ -469,25 +465,22 @@
 
 ---
 
-## 📤 **Rota 15: Upload de Print**
+## 📤 **Rota 15: Upload de Print (JSON)**
 
 ### **Configuração:**
 - **Method:** POST
-- **URL:** `http://localhost:8080/A2/prints`
+- **URL:** `http://localhost:8080/worldskills/bibliotech/prints`
 - **Headers:** 
   ```
   Authorization: Bearer SEU_TOKEN_AQUI
+  Content-Type: application/json
   ```
-- **Body:** Multipart Form
+- **Body (JSON):**
+  ```json
+  {
+    "id_user": "1"
+  }
   ```
-  id_user: 1
-  imagem: [Selecionar arquivo PNG/JPG]
-  ```
-
-### **Como configurar no Insomnia:**
-1. Selecione **Body Type:** "Multipart Form"
-2. Adicione campo **`id_user`** (Text): `1`
-3. Adicione campo **`imagem`** (File): Clique em "Choose File"
 
 ### **Resultado Esperado:**
 ```json
@@ -497,10 +490,11 @@
   "print": {
     "id": "1",
     "user_id": "1",
-    "file_name": "print_1686158400000.png",
-    "created_at": "2025-06-07T20:25:00.000Z"
+    "file_name": "print_bibliotech_1719999999999.png",
+    "created_at": "2025-07-07T20:25:00.000Z"
   },
-  "file_url": "/uploads/print_1686158400000.png"
+  "file_url": "/uploads/print_bibliotech_1719999999999.png",
+  "mode": "JSON simulado"
 }
 ```
 
@@ -512,10 +506,52 @@
 
 ---
 
+## 📤 **Rota 16: Upload de Print (Multipart)**
+
+### **Configuração:**
+- **Method:** POST
+- **URL:** `http://localhost:8080/worldskills/bibliotech/prints`
+- **Headers:** 
+  ```
+  Authorization: Bearer SEU_TOKEN_AQUI
+  ```
+- **Body:** Multipart Form
+  ```
+  Nenhum campo necessário para o teste
+  ```
+
+### **Como configurar no Insomnia:**
+1. Selecione **Body Type:** "Multipart Form"
+2. **Nota:** A API simula o upload mesmo sem arquivo
+
+### **Resultado Esperado:**
+```json
+{
+  "success": true,
+  "message": "Print enviado com sucesso",
+  "print": {
+    "id": "2",
+    "user_id": "1",
+    "file_name": "print_bibliotech_multipart_1719999999999.png",
+    "created_at": "2025-07-07T20:25:00.000Z"
+  },
+  "file_url": "/uploads/print_bibliotech_multipart_1719999999999.png",
+  "mode": "Multipart"
+}
+```
+
+### **✅ Status da Rota 16:**
+- [ ] **TESTE:** Executar no Insomnia
+- [ ] **RESULTADO:** Status 200 ✅ / Erro ❌
+- [ ] **ARQUIVO SALVO:** _______________
+- [ ] **OBSERVAÇÕES:** _______________
+
+---
+
 ## 📊 **Resumo Final**
 
 ### **Estatísticas:**
-- **Total de rotas testadas:** ___/15
+- **Total de rotas testadas:** ___/16
 - **Sucessos:** ___
 - **Falhas:** ___
 - **Taxa de sucesso:** ___%
@@ -542,16 +578,27 @@
 4. **Anote observações** para cada teste
 5. **Reporte problemas** encontrados
 
+### **Credenciais de teste:**
+- **fred@fred.com** / **123abc@**
+- **julia@edulib.com** / **julia123!**
+- **admin@edulib.com** / **admin2024#**
+
+### **⚠️ IMPORTANTE:**
+- **Tokens expiram em 5 minutos** (para avaliação)
+- **Senhas devem ter símbolos obrigatórios**
+- **Bibliotecas ordenadas por data de cadastro**
+
 ### **Ordem recomendada:**
 1. Debug Routes (2)
 2. Login Fred (3)
 3. Validar Token (6)
 4. MOTD (7)
-5. Lista Escolas (8)
+5. Lista Bibliotecas (8)
 6. Listar Comentários (10)
 7. Adicionar Comentário (12)
 8. Listar Prints (14)
-9. Upload Print (15)
-10. Testes de erro (5, 9, 13)
+9. Upload Print JSON (15)
+10. Upload Print Multipart (16)
+11. Testes de erro (5, 9, 13)
 
 **Vamos começar pela Rota 2 (Debug Routes)?** 🎯
