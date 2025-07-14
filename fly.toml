@@ -1,5 +1,5 @@
-# fly.toml - Configuração para deploy da BiblioTech API
-# WorldSkills 2025 - Simulado A2 (30% variação)
+# fly.toml - Configuração para deploy da SafeEdu API
+# WorldSkills 2025 - Módulo A2 - Desenvolvimento de Aplicativos
 # Deploy no Fly.io
 
 # =============================================================================
@@ -34,8 +34,8 @@ kill_timeout = "5s"
   ENVIRONMENT = "production"
   
   # Identificação da API
-  API_NAME = "BiblioTech"
-  COMPANY = "EduLib"
+  API_NAME = "SafeEdu"
+  COMPANY = "SafeEdu"
   
   # Configurações de log
   LOG_LEVEL = "info"
@@ -53,7 +53,7 @@ kill_timeout = "5s"
   
   # WorldSkills settings
   WORLDSKILLS_MODULE = "A2"
-  WORLDSKILLS_VARIANT = "bibliotech"
+  WORLDSKILLS_VARIANT = "safeedu"
 
 # =============================================================================
 # SERVIÇOS HTTP
@@ -113,7 +113,7 @@ kill_timeout = "5s"
 
 [mounts]
   # Volume para uploads de arquivos
-  source = "bibliotech_uploads"
+  source = "safeedu_uploads"
   destination = "/app/uploads"
   initial_size = "1gb"        # Tamanho inicial de 1GB
   
@@ -124,13 +124,6 @@ kill_timeout = "5s"
 [deploy]
   # Estratégia de deploy
   strategy = "rolling"        # Deploy gradual (sem downtime)
-  
-# =============================================================================
-# PROCESSOS
-# =============================================================================
-
-# Processo principal da aplicação (simplificado)
-# O Dockerfile já define o CMD/ENTRYPOINT
   
 # =============================================================================
 # MÉTRICAS E MONITORING
@@ -145,45 +138,62 @@ kill_timeout = "5s"
 # CONFIGURAÇÕES DE REGIÃO E SCALING
 # =============================================================================
 
-# Regiões onde a aplicação pode rodar
-# primary_region já definido acima como "gru" (São Paulo)
-
 # Configurações de auto-scaling
 [scaling]
   min_machines_running = 1    # Mínimo de 1 instância sempre rodando
   max_machines_running = 3    # Máximo de 3 instâncias (para economia)
 
 # =============================================================================
-# CONFIGURAÇÕES ESPECÍFICAS DA BIBLIOTECH API
+# AUTO STOP - ECONOMIA DE RECURSOS
+# =============================================================================
+
+# Parar máquinas automaticamente após 3 horas de inatividade
+[http_service]
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0    # Permite parar todas as máquinas
+  
+  # Configurações de timeout
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 200
+    hard_limit = 500
+    
+  # Auto stop após 3 horas (10800 segundos)
+  [http_service.auto_stop_machines]
+    enabled = true
+    min_machines_running = 0
+    max_machines_running = 3
+    
+# Configuração de máquinas automáticas
+[auto_stop_machines]
+  enabled = true
+  min_machines_running = 0
+  max_seconds_without_requests = 10800  # 3 horas = 3 * 60 * 60 = 10800 segundos
+
+# =============================================================================
+# CONFIGURAÇÕES ESPECÍFICAS DA SAFEEDU API
 # =============================================================================
 
 # Variáveis específicas do projeto
-[env.bibliotech]
+[env.safeedu]
   # Endpoints base
-  JWT_GENERATE_PATH = "/worldskills/bibliotech/jwt/generate_token"
-  JWT_VALIDATE_PATH = "/worldskills/bibliotech/jwt/validate_token"
-  MOTD_PATH = "/worldskills/bibliotech/motd"
-  LIBRARY_LIST_PATH = "/worldskills/bibliotech/library_list"
-  COMMENTS_PATH = "/worldskills/bibliotech/comments"
-  PRINTS_PATH = "/worldskills/bibliotech/prints"
+  JWT_GENERATE_PATH = "/worldskills/A2/jwt/generate_token"
+  JWT_VALIDATE_PATH = "/worldskills/A2/jwt/validate_token"
+  MOTD_PATH = "/worldskills/A2/motd"
+  SCHOOL_LIST_PATH = "/worldskills/A2/school_list"
+  COMMENTS_PATH = "/worldskills/A2/comments"
+  PRINTS_PATH = "/worldskills/A2/prints"
   
   # Configurações de dados
-  DEFAULT_LIBRARIES_COUNT = "5"
-  ORDER_BY = "data_cadastro_desc"
+  DEFAULT_SCHOOLS_COUNT = "5"
+  ORDER_BY = "alfabetico"
   
   # Configurações de segurança
-  PASSWORD_MIN_LENGTH = "8"
-  PASSWORD_REQUIRE_SYMBOLS = "true"
+  PASSWORD_MIN_LENGTH = "6"
+  PASSWORD_REQUIRE_NUMBERS = "true"
+  PASSWORD_REQUIRE_LETTERS = "true"
   JWT_EXPIRATION_HOURS = "24"
-
-# =============================================================================
-# ROTAS PERSONALIZADAS (se necessário)
-# =============================================================================
-
-# Configuração para proxy reverso se necessário
-# [[http_service.http_options.response.headers]]
-#   name = "X-API-Name"
-#   value = "BiblioTech"
 
 # =============================================================================
 # CONFIGURAÇÕES DE LOGS
@@ -201,25 +211,6 @@ kill_timeout = "5s"
   output = ["stdout", "stderr"]
 
 # =============================================================================
-# CONFIGURAÇÕES DE BACKUP (OPCIONAL)
-# =============================================================================
-
-# Configurações de backup do volume (se necessário)
-# [backup]
-#   schedule = "daily"
-#   retention = "7d"
-
-# =============================================================================
-# CONFIGURAÇÕES DE DESENVOLVIMENTO
-# =============================================================================
-
-# Configurações específicas para desenvolvimento (comentadas em produção)
-# [env.development]
-#   LOG_LEVEL = "debug"
-#   JWT_SECRET = "development_secret_key"
-#   CORS_ORIGIN = "http://localhost:3000"
-
-# =============================================================================
 # CONFIGURAÇÕES DE RECURSOS
 # =============================================================================
 
@@ -228,10 +219,3 @@ kill_timeout = "5s"
   memory = "256mb"
   cpu_kind = "shared"
   cpus = 1
-
-# =============================================================================
-# CONFIGURAÇÕES DE REDE (SIMPLIFICADAS)
-# =============================================================================
-
-# As configurações de rede já estão definidas na seção [[services]]
-# Removendo duplicações que podem causar conflitos

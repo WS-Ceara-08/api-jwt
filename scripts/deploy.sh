@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # =============================================================================
-# Script de Deploy Automatizado - BiblioTech API
-# WorldSkills 2025 - Simulado A2 (30% variação)
+# Script de Deploy Automatizado - SafeEdu API
+# WorldSkills 2025 - Módulo A2 - Desenvolvimento de Aplicativos
 # =============================================================================
 
 set -e  # Sair em caso de erro
@@ -21,13 +21,13 @@ readonly PURPLE='\033[0;35m'
 readonly CYAN='\033[0;36m'
 readonly NC='\033[0m' # No Color
 
-# Configurações do projeto BiblioTech
+# Configurações do projeto SafeEdu
 readonly APP_NAME="bibliotech-api"
 readonly REGION="gru"
-readonly VOLUME_NAME="bibliotech_uploads"
+readonly VOLUME_NAME="safeedu_uploads"
 readonly VOLUME_SIZE="1"
-readonly API_NAME="BiblioTech"
-readonly COMPANY="EduLib"
+readonly API_NAME="SafeEdu"
+readonly COMPANY="SafeEdu"
 
 # =============================================================================
 # FUNÇÕES UTILITÁRIAS
@@ -36,9 +36,9 @@ readonly COMPANY="EduLib"
 print_banner() {
     echo -e "${CYAN}"
     echo "=============================================="
-    echo "🏛️ BiblioTech API - Deploy Automatizado"
-    echo "🏢 Empresa: EduLib"
-    echo "🌐 Destino: workspace.dinizeotecnologia.com.br"
+    echo "🛡️ SafeEdu API - Deploy Automatizado"
+    echo "🏢 Empresa: SafeEdu"
+    echo "🌐 Destino: https://bibliotech-api.fly.dev"
     echo "📅 $(date '+%Y-%m-%d %H:%M:%S')"
     echo "=============================================="
     echo -e "${NC}"
@@ -138,7 +138,7 @@ check_prerequisites() {
 }
 
 check_project_files() {
-    print_step "Verificando arquivos do projeto BiblioTech..."
+    print_step "Verificando arquivos do projeto SafeEdu..."
     
     local required_files=(
         "bin/server.dart"
@@ -165,11 +165,11 @@ check_project_files() {
     
     print_success "Todos os arquivos necessários encontrados"
     
-    # Verificar se é realmente a BiblioTech API
-    if grep -q "bibliotech" bin/server.dart && grep -q "BiblioTech" bin/server.dart; then
-        print_success "✅ Arquivos da BiblioTech API identificados"
+    # Verificar se é realmente a SafeEdu API
+    if grep -q "safeedu\|SafeEdu" bin/server.dart && grep -q "A2" bin/server.dart; then
+        print_success "✅ Arquivos da SafeEdu API identificados"
     else
-        print_warning "⚠️ Arquivos podem não ser da BiblioTech API"
+        print_warning "⚠️ Arquivos podem não ser da SafeEdu API"
     fi
     
     # Verificar se pubspec.yaml está válido
@@ -221,7 +221,7 @@ create_or_check_volume() {
 }
 
 configure_secrets() {
-    print_step "Configurando secrets da BiblioTech API..."
+    print_step "Configurando secrets da SafeEdu API..."
     
     # Verificar se JWT_SECRET já existe
     if fly secrets list -a "$APP_NAME" 2>/dev/null | grep -q "JWT_SECRET"; then
@@ -229,7 +229,7 @@ configure_secrets() {
         
         if confirm_action "Deseja atualizar o JWT_SECRET?"; then
             local jwt_secret
-            jwt_secret="bibliotech_secret_key_$(date +%s)_$(openssl rand -hex 8)"
+            jwt_secret="safeedu_secret_key_$(date +%s)_$(openssl rand -hex 8)"
             
             print_step "Atualizando JWT_SECRET..."
             fly secrets set JWT_SECRET="$jwt_secret" -a "$APP_NAME"
@@ -238,25 +238,26 @@ configure_secrets() {
     else
         print_step "Configurando JWT_SECRET..."
         local jwt_secret
-        jwt_secret="bibliotech_secret_key_$(date +%s)_$(openssl rand -hex 8)"
+        jwt_secret="safeedu_secret_key_$(date +%s)_$(openssl rand -hex 8)"
         
         fly secrets set JWT_SECRET="$jwt_secret" -a "$APP_NAME"
         print_success "JWT_SECRET configurado"
     fi
     
-    # Configurar secrets específicos da BiblioTech
-    local bibliotech_secrets=(
-        "API_NAME=BiblioTech"
-        "COMPANY=EduLib"
+    # Configurar secrets específicos da SafeEdu
+    local safeedu_secrets=(
+        "API_NAME=SafeEdu"
+        "COMPANY=SafeEdu"
         "API_VERSION=1.0.0"
         "DEPLOY_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
         "WORLDSKILLS_MODULE=A2"
-        "WORLDSKILLS_VARIANT=bibliotech"
-        "PASSWORD_MIN_LENGTH=8"
-        "PASSWORD_REQUIRE_SYMBOLS=true"
+        "WORLDSKILLS_VARIANT=safeedu"
+        "PASSWORD_MIN_LENGTH=6"
+        "PASSWORD_REQUIRE_NUMBERS=true"
+        "PASSWORD_REQUIRE_LETTERS=true"
     )
     
-    for secret in "${bibliotech_secrets[@]}"; do
+    for secret in "${safeedu_secrets[@]}"; do
         local key="${secret%%=*}"
         local value="${secret#*=}"
         
@@ -266,18 +267,18 @@ configure_secrets() {
         fi
     done
     
-    print_success "Secrets da BiblioTech configurados"
+    print_success "Secrets da SafeEdu configurados"
 }
 
 perform_deploy() {
     local deploy_type="$1"
     
-    print_step "Iniciando deploy da BiblioTech API ($deploy_type)..."
+    print_step "Iniciando deploy da SafeEdu API ($deploy_type)..."
     echo ""
     
     if [ "$deploy_type" = "inicial" ]; then
         # Deploy inicial com launch
-        print_step "Criando aplicação BiblioTech e fazendo deploy inicial..."
+        print_step "Criando aplicação SafeEdu e fazendo deploy inicial..."
         
         # Launch com configurações específicas
         fly launch \
@@ -291,7 +292,7 @@ perform_deploy() {
         fly deploy -a "$APP_NAME"
     else
         # Deploy de atualização
-        print_step "Fazendo deploy de atualização da BiblioTech..."
+        print_step "Fazendo deploy de atualização da SafeEdu..."
         fly deploy -a "$APP_NAME"
     fi
 }
@@ -301,16 +302,16 @@ perform_deploy() {
 # =============================================================================
 
 verify_deployment() {
-    print_step "Verificando deploy da BiblioTech..."
+    print_step "Verificando deploy da SafeEdu..."
     
     # Aguardar um pouco para a aplicação inicializar
-    print_info "Aguardando inicialização da BiblioTech API..."
+    print_info "Aguardando inicialização da SafeEdu API..."
     sleep 20
     
     # Verificar status
     print_step "Verificando status da aplicação..."
     if fly status -a "$APP_NAME" | grep -q "running"; then
-        print_success "BiblioTech API está rodando!"
+        print_success "SafeEdu API está rodando!"
     else
         print_warning "Aplicação pode estar iniciando ainda..."
         print_info "Logs recentes:"
@@ -319,7 +320,7 @@ verify_deployment() {
     
     # Obter URL da aplicação
     local app_url="https://$APP_NAME.fly.dev"
-    print_success "URL da BiblioTech API: $app_url"
+    print_success "URL da SafeEdu API: $app_url"
     
     # Testar endpoint de health
     print_step "Testando health check..."
@@ -342,8 +343,8 @@ verify_deployment() {
     fi
 }
 
-test_bibliotech_endpoints() {
-    print_step "Testando endpoints da BiblioTech API..."
+test_safeedu_endpoints() {
+    print_step "Testando endpoints da SafeEdu API..."
     
     local app_url="https://$APP_NAME.fly.dev"
     
@@ -352,29 +353,29 @@ test_bibliotech_endpoints() {
     local health_response
     health_response=$(curl -s "$app_url/health" || echo "FAIL")
     
-    if echo "$health_response" | grep -q "BiblioTech"; then
-        print_success "✅ Health check identificou BiblioTech"
+    if echo "$health_response" | grep -q "SafeEdu"; then
+        print_success "✅ Health check identificou SafeEdu"
     else
         print_warning "❌ Health check com problemas"
     fi
     
     # Teste 2: MOTD
     print_info "Testando MOTD..."
-    if curl -f -s "$app_url/worldskills/bibliotech/motd" >/dev/null; then
+    if curl -f -s "$app_url/worldskills/A2/motd" >/dev/null; then
         print_success "✅ MOTD endpoint funcionando"
     else
         print_warning "❌ MOTD endpoint com problemas"
     fi
     
-    # Teste 3: Login com senha robusta
-    print_info "Testando login com senha robusta..."
+    # Teste 3: Login com senha simples
+    print_info "Testando login com senha 6+ chars..."
     local login_response
-    login_response=$(curl -s -X POST "$app_url/worldskills/bibliotech/jwt/generate_token" \
+    login_response=$(curl -s -X POST "$app_url/worldskills/A2/jwt/generate_token" \
         -H "Content-Type: application/json" \
-        -d '{"email": "fred@fred.com", "password": "123abc@"}' || echo "FAIL")
+        -d '{"email": "fred@fred.com", "password": "fred123"}' || echo "FAIL")
     
     if echo "$login_response" | grep -q "token"; then
-        print_success "✅ Sistema de login com senha robusta funcionando"
+        print_success "✅ Sistema de login com senha 6+ chars funcionando"
         
         # Extrair token para teste adicional
         local token
@@ -385,35 +386,35 @@ test_bibliotech_endpoints() {
         fi
         
         if [ -n "$token" ] && [ "$token" != "null" ]; then
-            # Teste 4: Endpoint autenticado (lista de bibliotecas)
-            print_info "Testando lista de bibliotecas..."
-            local libraries_response
-            libraries_response=$(curl -s -H "Authorization: Bearer $token" "$app_url/worldskills/bibliotech/library_list" || echo "FAIL")
+            # Teste 4: Endpoint autenticado (lista de escolas)
+            print_info "Testando lista de escolas..."
+            local schools_response
+            schools_response=$(curl -s -H "Authorization: Bearer $token" "$app_url/worldskills/A2/school_list" || echo "FAIL")
             
-            if echo "$libraries_response" | grep -q "Biblioteca Central UFCE"; then
-                print_success "✅ Lista de bibliotecas funcionando"
+            if echo "$schools_response" | grep -q "Colégio Militar"; then
+                print_success "✅ Lista de escolas funcionando"
                 
-                # Verificar ordenação por data
-                if echo "$libraries_response" | grep -q "data_cadastro"; then
-                    print_success "✅ Ordenação por data_cadastro implementada"
+                # Verificar ordenação alfabética
+                if echo "$schools_response" | grep -q "schools"; then
+                    print_success "✅ Ordenação alfabética implementada"
                 fi
             else
-                print_warning "❌ Problemas com lista de bibliotecas"
+                print_warning "❌ Problemas com lista de escolas"
             fi
         fi
     else
         print_warning "❌ Problemas no sistema de login"
     fi
     
-    # Teste 5: Validação de senha sem símbolos (deve falhar)
-    print_info "Testando validação de senha sem símbolos..."
+    # Teste 5: Validação de senha sem números (deve falhar)
+    print_info "Testando validação de senha sem números..."
     local invalid_response
-    invalid_response=$(curl -s -w "%{http_code}" -X POST "$app_url/worldskills/bibliotech/jwt/generate_token" \
+    invalid_response=$(curl -s -w "%{http_code}" -X POST "$app_url/worldskills/A2/jwt/generate_token" \
         -H "Content-Type: application/json" \
-        -d '{"email": "fred@fred.com", "password": "123abc"}' || echo "ERROR")
+        -d '{"email": "fred@fred.com", "password": "abcdef"}' || echo "ERROR")
     
     if echo "$invalid_response" | grep -q "400"; then
-        print_success "✅ Validação de senha com símbolos funcionando"
+        print_success "✅ Validação de senha com letras e números funcionando"
     else
         print_warning "❌ Validação de senha pode ter problemas"
     fi
@@ -428,34 +429,34 @@ show_final_info() {
     
     echo ""
     echo -e "${CYAN}=============================================="
-    echo "🎉 Deploy da BiblioTech API Concluído!"
+    echo "🎉 Deploy da SafeEdu API Concluído!"
     echo "=============================================="
     echo -e "${NC}"
-    echo -e "${GREEN}🏛️ API BiblioTech:${NC} $app_url"
-    echo -e "${GREEN}🏢 Empresa:${NC} EduLib"
-    echo -e "${GREEN}📚 Sistema:${NC} Gestão de Bibliotecas"
+    echo -e "${GREEN}🛡️ API SafeEdu:${NC} $app_url"
+    echo -e "${GREEN}🏢 Empresa:${NC} SafeEdu"
+    echo -e "${GREEN}🏫 Sistema:${NC} Segurança Urbana - Escolas"
     echo ""
     echo -e "${YELLOW}🧪 Endpoints para teste:${NC}"
     echo "   GET  $app_url/health"
-    echo "   GET  $app_url/worldskills/bibliotech/motd"
-    echo "   POST $app_url/worldskills/bibliotech/jwt/generate_token"
-    echo "   GET  $app_url/worldskills/bibliotech/library_list"
-    echo "   GET  $app_url/worldskills/bibliotech/comments"
-    echo "   POST $app_url/worldskills/bibliotech/comments"
-    echo "   GET  $app_url/worldskills/bibliotech/prints"
-    echo "   POST $app_url/worldskills/bibliotech/prints"
+    echo "   GET  $app_url/worldskills/A2/motd"
+    echo "   POST $app_url/worldskills/A2/jwt/generate_token"
+    echo "   GET  $app_url/worldskills/A2/school_list"
+    echo "   GET  $app_url/worldskills/A2/comments"
+    echo "   POST $app_url/worldskills/A2/comments"
+    echo "   GET  $app_url/worldskills/A2/prints"
+    echo "   POST $app_url/worldskills/A2/prints"
     echo ""
-    echo -e "${YELLOW}👤 Usuários de teste (senha com símbolos obrigatórios):${NC}"
-    echo "   fred@fred.com / 123abc@"
-    echo "   julia@edulib.com / julia123!"
-    echo "   admin@edulib.com / admin2024#"
+    echo -e "${YELLOW}👤 Usuários de teste (senha 6+ chars + letras + números):${NC}"
+    echo "   fred@fred.com / fred123"
+    echo "   maria@safeedu.com / maria123"
+    echo "   admin@safeedu.com / admin2024"
     echo ""
-    echo -e "${YELLOW}🏛️ Bibliotecas cadastradas:${NC}"
-    echo "   1. Biblioteca Central UFCE (★★★★★)"
-    echo "   2. Biblioteca Prof. Martins Filho (★★★★)"
-    echo "   3. Biblioteca Setorial Engenharia (★★★)"
-    echo "   4. Biblioteca de Medicina (★★★★)"
-    echo "   5. Biblioteca do ICA (★★★★★)"
+    echo -e "${YELLOW}🏫 Escolas cadastradas (ordem alfabética):${NC}"
+    echo "   1. Colégio Militar de Fortaleza (★★★★★)"
+    echo "   2. Escola de Ensino Médio Paulo Freire (★★★★)"
+    echo "   3. Escola Estadual Dom Aureliano Matos (★★★★)"
+    echo "   4. Instituto Federal do Ceará - Campus Fortaleza (★★★★★)"
+    echo "   5. Liceu do Ceará (★★★★)"
     echo ""
     echo -e "${YELLOW}🔧 Comandos úteis:${NC}"
     echo "   fly logs -a $APP_NAME              # Ver logs"
@@ -466,16 +467,16 @@ show_final_info() {
     echo ""
     echo -e "${YELLOW}📱 Configure seu app mobile:${NC}"
     echo "   Base URL: $app_url"
-    echo "   Endpoints: /worldskills/bibliotech/*"
+    echo "   Endpoints: /worldskills/A2/*"
     echo ""
     echo -e "${YELLOW}✅ Especificações implementadas:${NC}"
-    echo "   🔗 URLs com /worldskills/bibliotech/"
-    echo "   🔐 Senhas com 8+ chars + símbolos obrigatórios"
-    echo "   📅 Lista ordenada por data_cadastro DESC"
-    echo "   🏛️ Contexto bibliotecas (não escolas)"
-    echo "   🏢 Empresa EduLib identificada"
+    echo "   🔗 URLs com /worldskills/A2/"
+    echo "   🔐 Senhas com 6+ chars + letras + números"
+    echo "   📅 Lista ordenada alfabeticamente"
+    echo "   🏫 Contexto escolas (não bibliotecas)"
+    echo "   🏢 Empresa SafeEdu identificada"
     echo ""
-    echo -e "${GREEN}✅ BiblioTech API pronta para WorldSkills 2025!${NC}"
+    echo -e "${GREEN}✅ SafeEdu API pronta para WorldSkills 2025!${NC}"
     echo ""
 }
 
@@ -495,15 +496,15 @@ main() {
     local deploy_type
     if check_app_exists; then
         deploy_type="atualização"
-        print_info "Será feita uma atualização da BiblioTech API existente"
+        print_info "Será feita uma atualização da SafeEdu API existente"
     else
         deploy_type="inicial"
-        print_info "Será criada uma nova aplicação BiblioTech"
+        print_info "Será criada uma nova aplicação SafeEdu"
     fi
     
     # Confirmar deploy
     echo ""
-    if ! confirm_action "Deseja continuar com o deploy da BiblioTech API ($deploy_type)?"; then
+    if ! confirm_action "Deseja continuar com o deploy da SafeEdu API ($deploy_type)?"; then
         print_info "Deploy cancelado pelo usuário"
         exit 0
     fi
@@ -516,14 +517,14 @@ main() {
     
     # Verificações pós-deploy
     verify_deployment
-    test_bibliotech_endpoints
+    test_safeedu_endpoints
     
     # Informações finais
     show_final_info
     
     # Opção de abrir no navegador
     local app_url="https://$APP_NAME.fly.dev"
-    if confirm_action "Deseja abrir a BiblioTech API no navegador?"; then
+    if confirm_action "Deseja abrir a SafeEdu API no navegador?"; then
         if command_exists open; then
             open "$app_url/health"
         elif command_exists xdg-open; then
@@ -533,7 +534,7 @@ main() {
         fi
     fi
     
-    print_success "Script de deploy da BiblioTech concluído!"
+    print_success "Script de deploy da SafeEdu concluído!"
 }
 
 # =============================================================================
@@ -549,7 +550,7 @@ trap 'print_error "Script interrompido na linha $LINENO. Use fly logs -a $APP_NA
 
 # Verificar se está no diretório correto
 if [ ! -f "pubspec.yaml" ]; then
-    print_error "Execute este script no diretório raiz do projeto BiblioTech API"
+    print_error "Execute este script no diretório raiz do projeto SafeEdu API"
     print_info "Certifique-se de que pubspec.yaml está presente"
     exit 1
 fi

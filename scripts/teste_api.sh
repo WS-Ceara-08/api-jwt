@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # =============================================================================
-# Script de Testes Automatizados - BiblioTech API
-# WorldSkills 2025 - Simulado A2 (30% variação)
+# Script de Testes Automatizados - SafeEdu API
+# WorldSkills 2025 - Módulo A2 - Desenvolvimento de Aplicativos
 # =============================================================================
 
 set -e  # Sair em caso de erro
@@ -21,7 +21,7 @@ readonly CYAN='\033[0;36m'
 readonly NC='\033[0m' # No Color
 
 # Configurações de teste
-BASE_URL="${1:-http://localhost:8080}"
+BASE_URL="${1:-https://bibliotech-api.fly.dev}"
 TIMEOUT=10
 VERBOSE=false
 
@@ -37,8 +37,8 @@ FAILED_TESTS=0
 print_banner() {
     echo -e "${CYAN}"
     echo "=============================================="
-    echo "🧪 BiblioTech API - Testes Automatizados"
-    echo "🏛️ Sistema de Gestão de Bibliotecas"
+    echo "🛡️ SafeEdu API - Testes Automatizados"
+    echo "🏫 Sistema de Segurança Urbana - Escolas"
     echo "🌐 Base URL: $BASE_URL"
     echo "📅 $(date '+%Y-%m-%d %H:%M:%S')"
     echo "=============================================="
@@ -125,7 +125,6 @@ extract_json_value() {
     local json="$1"
     local key="$2"
     
-    # Método simples para extrair valor sem jq
     echo "$json" | grep -o "\"$key\":\"[^\"]*\"" | cut -d'"' -f4
 }
 
@@ -133,18 +132,18 @@ extract_json_value() {
 check_api_availability() {
     print_section "Verificação de Conectividade"
     
-    print_test "Verificando se BiblioTech API está rodando..."
+    print_test "Verificando se SafeEdu API está rodando..."
     
     local health_response
     health_response=$(make_request "GET" "/health" "" "" "200")
     
     if [[ "$health_response" == *"ERROR"* ]]; then
-        print_failure "BiblioTech API não está rodando em $BASE_URL"
+        print_failure "SafeEdu API não está rodando em $BASE_URL"
         print_info "💡 Para testar localmente: dart run bin/server.dart"
         print_info "💡 Para testar produção: $0 https://bibliotech-api.fly.dev"
         exit 1
     else
-        print_success "BiblioTech API está respondendo"
+        print_success "SafeEdu API está respondendo"
         if command -v jq >/dev/null 2>&1; then
             echo "$health_response" | jq '.' 2>/dev/null || echo "$health_response"
         else
@@ -169,9 +168,9 @@ test_health_check() {
         return 1
     fi
     
-    if [[ "$response" == *"healthy"* ]] && [[ "$response" == *"BiblioTech"* ]]; then
+    if [[ "$response" == *"healthy"* ]] && [[ "$response" == *"SafeEdu"* ]]; then
         print_success "Health check passou"
-        print_info "API: BiblioTech"
+        print_info "API: SafeEdu"
     else
         print_failure "Health check retornou resposta inesperada"
         return 1
@@ -181,16 +180,16 @@ test_health_check() {
 test_motd() {
     print_section "Message of the Day (MOTD)"
     
-    print_test "GET /worldskills/bibliotech/motd"
+    print_test "GET /worldskills/A2/motd"
     local response
-    response=$(make_request "GET" "/worldskills/bibliotech/motd" "" "" "200")
+    response=$(make_request "GET" "/worldskills/A2/motd" "" "" "200")
     
     if [[ "$response" == *"ERROR"* ]]; then
         print_failure "MOTD endpoint falhou"
         return 1
     fi
     
-    if [[ "$response" == *"message"* ]] && [[ "$response" == *"BiblioTech"* ]]; then
+    if [[ "$response" == *"message"* ]] && [[ "$response" == *"SafeEdu"* ]]; then
         print_success "MOTD endpoint funcionando"
         local message
         message=$(extract_json_value "$response" "message")
@@ -205,12 +204,12 @@ test_authentication() {
     print_section "Autenticação JWT"
     
     # Teste 1: Login com credenciais válidas (Fred)
-    print_test "POST /worldskills/bibliotech/jwt/generate_token (Fred)"
-    local login_data='{"email": "fred@fred.com", "password": "123abc@"}'
+    print_test "POST /worldskills/A2/jwt/generate_token (Fred)"
+    local login_data='{"email": "fred@fred.com", "password": "fred123"}'
     local headers="Content-Type: application/json"
     
     local login_response
-    login_response=$(make_request "POST" "/worldskills/bibliotech/jwt/generate_token" "$login_data" "$headers" "200")
+    login_response=$(make_request "POST" "/worldskills/A2/jwt/generate_token" "$login_data" "$headers" "200")
     
     if [[ "$login_response" == *"ERROR"* ]]; then
         print_failure "Login do Fred falhou"
@@ -223,7 +222,6 @@ test_authentication() {
         # Extrair token para usar em outros testes
         JWT_TOKEN=$(extract_json_value "$login_response" "token")
         if [ -z "$JWT_TOKEN" ]; then
-            # Método alternativo se o primeiro falhar
             JWT_TOKEN=$(echo "$login_response" | grep -o '"token":"[^"]*"' | cut -d'"' -f4)
         fi
         print_info "Token obtido: ${JWT_TOKEN:0:20}..."
@@ -232,41 +230,41 @@ test_authentication() {
         return 1
     fi
     
-    # Teste 2: Login com senha sem símbolos (deve falhar)
-    print_test "POST /worldskills/bibliotech/jwt/generate_token (senha sem símbolos)"
-    local invalid_login='{"email": "fred@fred.com", "password": "123abc"}'
+    # Teste 2: Login com senha sem números (deve falhar)
+    print_test "POST /worldskills/A2/jwt/generate_token (senha sem números)"
+    local invalid_login='{"email": "fred@fred.com", "password": "abcdef"}'
     
     local invalid_response
-    invalid_response=$(make_request "POST" "/worldskills/bibliotech/jwt/generate_token" "$invalid_login" "$headers" "400")
+    invalid_response=$(make_request "POST" "/worldskills/A2/jwt/generate_token" "$invalid_login" "$headers" "400")
     
     if [[ "$invalid_response" == *"STATUS_ERROR"* ]]; then
-        print_failure "Senha sem símbolos deveria retornar 400"
+        print_failure "Senha sem números deveria retornar 400"
         return 1
     else
-        print_success "Validação de senha com símbolos funcionando"
+        print_success "Validação de senha com letras e números funcionando"
     fi
     
     # Teste 3: Login com senha curta (deve falhar)
-    print_test "POST /worldskills/bibliotech/jwt/generate_token (senha curta)"
-    local short_pass='{"email": "fred@fred.com", "password": "12@"}'
+    print_test "POST /worldskills/A2/jwt/generate_token (senha curta)"
+    local short_pass='{"email": "fred@fred.com", "password": "12a"}'
     
     local short_response
-    short_response=$(make_request "POST" "/worldskills/bibliotech/jwt/generate_token" "$short_pass" "$headers" "400")
+    short_response=$(make_request "POST" "/worldskills/A2/jwt/generate_token" "$short_pass" "$headers" "400")
     
     if [[ "$short_response" == *"STATUS_ERROR"* ]]; then
         print_failure "Senha curta deveria retornar 400"
         return 1
     else
-        print_success "Validação de senha de 8+ caracteres funcionando"
+        print_success "Validação de senha de 6+ caracteres funcionando"
     fi
     
     # Teste 4: Validar token
     if [ -n "$JWT_TOKEN" ]; then
-        print_test "POST /worldskills/bibliotech/jwt/validate_token"
+        print_test "POST /worldskills/A2/jwt/validate_token"
         local validate_data="{\"token\": \"$JWT_TOKEN\"}"
         
         local validate_response
-        validate_response=$(make_request "POST" "/worldskills/bibliotech/jwt/validate_token" "$validate_data" "$headers" "200")
+        validate_response=$(make_request "POST" "/worldskills/A2/jwt/validate_token" "$validate_data" "$headers" "200")
         
         if [[ "$validate_response" == *"valid"* ]] && [[ "$validate_response" == *"true"* ]]; then
             print_success "Validação de token funcionando"
@@ -277,8 +275,8 @@ test_authentication() {
     fi
 }
 
-test_library_list() {
-    print_section "Lista de Bibliotecas"
+test_school_list() {
+    print_section "Lista de Escolas"
     
     if [ -z "$JWT_TOKEN" ]; then
         print_failure "Token JWT necessário para este teste"
@@ -287,36 +285,36 @@ test_library_list() {
     
     local auth_header="Authorization: Bearer $JWT_TOKEN"
     
-    print_test "GET /worldskills/bibliotech/library_list (com autenticação)"
+    print_test "GET /worldskills/A2/school_list (com autenticação)"
     local response
-    response=$(make_request "GET" "/worldskills/bibliotech/library_list" "" "$auth_header" "200")
+    response=$(make_request "GET" "/worldskills/A2/school_list" "" "$auth_header" "200")
     
     if [[ "$response" == *"ERROR"* ]]; then
-        print_failure "Lista de bibliotecas falhou"
+        print_failure "Lista de escolas falhou"
         return 1
     fi
     
-    if [[ "$response" == *"libraries"* ]] && [[ "$response" == *"Biblioteca Central UFCE"* ]]; then
-        print_success "Lista de bibliotecas funcionando"
+    if [[ "$response" == *"schools"* ]] && [[ "$response" == *"Colégio Militar"* ]]; then
+        print_success "Lista de escolas funcionando"
         
-        # Verificar se está ordenado por data_cadastro (mais recente primeiro)
-        if [[ "$response" == *"data_cadastro"* ]]; then
-            print_success "Ordenação por data de cadastro implementada"
+        # Verificar ordenação alfabética
+        if [[ "$response" == *"Colégio Militar de Fortaleza"* ]]; then
+            print_success "Ordenação alfabética implementada"
         fi
         
-        # Contar bibliotecas (método simples)
-        local library_count
-        library_count=$(echo "$response" | grep -o '"nome"' | wc -l)
-        print_info "Bibliotecas encontradas: $library_count"
+        # Contar escolas
+        local school_count
+        school_count=$(echo "$response" | grep -o '"nome"' | wc -l)
+        print_info "Escolas encontradas: $school_count"
     else
-        print_failure "Lista de bibliotecas retornou resposta inesperada"
+        print_failure "Lista de escolas retornou resposta inesperada"
         return 1
     fi
     
     # Teste sem autenticação
-    print_test "GET /worldskills/bibliotech/library_list (sem autenticação)"
+    print_test "GET /worldskills/A2/school_list (sem autenticação)"
     local unauth_response
-    unauth_response=$(make_request "GET" "/worldskills/bibliotech/library_list" "" "" "401")
+    unauth_response=$(make_request "GET" "/worldskills/A2/school_list" "" "" "401")
     
     if [[ "$unauth_response" == *"STATUS_ERROR"* ]]; then
         print_failure "Endpoint deveria retornar 401 sem autenticação"
@@ -324,10 +322,7 @@ test_library_list() {
     else
         print_success "Proteção de autenticação funcionando"
     fi
-    
-    # NOVO: Teste de erro forçado para avaliação
-    print_test "GET /worldskills/bibliotech/library_list (erro para avaliação)"
-    local error_headers="$auth_header"
+}
 
 test_comments() {
     print_section "Sistema de Comentários"
@@ -342,9 +337,9 @@ test_comments() {
     local headers="$auth_header"$'\n'"$content_header"
     
     # Teste 1: Listar comentários
-    print_test "GET /worldskills/bibliotech/comments"
+    print_test "GET /worldskills/A2/comments"
     local response
-    response=$(make_request "GET" "/worldskills/bibliotech/comments" "" "$auth_header" "200")
+    response=$(make_request "GET" "/worldskills/A2/comments" "" "$auth_header" "200")
     
     if [[ "$response" == *"ERROR"* ]]; then
         print_failure "Listagem de comentários falhou"
@@ -363,11 +358,11 @@ test_comments() {
     fi
     
     # Teste 2: Adicionar comentário
-    print_test "POST /worldskills/bibliotech/comments (adicionar comentário)"
-    local comment_data='{"id_biblioteca": "1", "comentario": "Comentário de teste BiblioTech - '$(date +%s)'"}'
+    print_test "POST /worldskills/A2/comments (adicionar comentário)"
+    local comment_data='{"id_escola": "1", "comentario": "Comentário de teste SafeEdu - '$(date +%s)'"}'
     
     local add_response
-    add_response=$(make_request "POST" "/worldskills/bibliotech/comments" "$comment_data" "$headers" "200")
+    add_response=$(make_request "POST" "/worldskills/A2/comments" "$comment_data" "$headers" "200")
     
     if [[ "$add_response" == *"ERROR"* ]]; then
         print_failure "Adição de comentário falhou"
@@ -381,18 +376,18 @@ test_comments() {
         return 1
     fi
     
-    # Teste 3: Comentário com biblioteca inexistente
-    print_test "POST /worldskills/bibliotech/comments (biblioteca inexistente)"
-    local invalid_comment='{"id_biblioteca": "999", "comentario": "Teste"}'
+    # Teste 3: Comentário com escola inexistente
+    print_test "POST /worldskills/A2/comments (escola inexistente)"
+    local invalid_comment='{"id_escola": "999", "comentario": "Teste"}'
     
     local invalid_response
-    invalid_response=$(make_request "POST" "/worldskills/bibliotech/comments" "$invalid_comment" "$headers" "404")
+    invalid_response=$(make_request "POST" "/worldskills/A2/comments" "$invalid_comment" "$headers" "404")
     
     if [[ "$invalid_response" == *"STATUS_ERROR"* ]]; then
-        print_failure "Biblioteca inexistente deveria retornar 404"
+        print_failure "Escola inexistente deveria retornar 404"
         return 1
     else
-        print_success "Validação de biblioteca existente funcionando"
+        print_success "Validação de escola existente funcionando"
     fi
 }
 
@@ -407,9 +402,9 @@ test_prints() {
     local auth_header="Authorization: Bearer $JWT_TOKEN"
     
     # Teste 1: Listar prints
-    print_test "GET /worldskills/bibliotech/prints"
+    print_test "GET /worldskills/A2/prints"
     local response
-    response=$(make_request "GET" "/worldskills/bibliotech/prints" "" "$auth_header" "200")
+    response=$(make_request "GET" "/worldskills/A2/prints" "" "$auth_header" "200")
     
     if [[ "$response" == *"ERROR"* ]]; then
         print_failure "Listagem de prints falhou"
@@ -428,19 +423,19 @@ test_prints() {
     fi
     
     # Teste 2: Upload de print via JSON
-    print_test "POST /worldskills/bibliotech/prints (JSON)"
+    print_test "POST /worldskills/A2/prints (JSON)"
     local json_upload='{"id_user": "1"}'
     local json_headers="$auth_header"$'\n'"Content-Type: application/json"
     
     local upload_response
-    upload_response=$(make_request "POST" "/worldskills/bibliotech/prints" "$json_upload" "$json_headers" "200")
+    upload_response=$(make_request "POST" "/worldskills/A2/prints" "$json_upload" "$json_headers" "200")
     
     if [[ "$upload_response" == *"ERROR"* ]]; then
         print_failure "Upload JSON de print falhou"
         return 1
     fi
     
-    if [[ "$upload_response" == *"success"* ]] && [[ "$upload_response" == *"bibliotech"* ]]; then
+    if [[ "$upload_response" == *"success"* ]] && [[ "$upload_response" == *"safeedu"* ]]; then
         print_success "Upload JSON de print funcionando"
     else
         print_failure "Upload JSON de print retornou resposta inesperada"
@@ -451,43 +446,43 @@ test_prints() {
 test_second_user() {
     print_section "Teste com Segundo Usuário"
     
-    # Login com Júlia
-    print_test "Login com julia@edulib.com"
-    local julia_login='{"email": "julia@edulib.com", "password": "julia123!"}'
+    # Login com Maria
+    print_test "Login com maria@safeedu.com"
+    local maria_login='{"email": "maria@safeedu.com", "password": "maria123"}'
     local headers="Content-Type: application/json"
     
-    local julia_response
-    julia_response=$(make_request "POST" "/worldskills/bibliotech/jwt/generate_token" "$julia_login" "$headers" "200")
+    local maria_response
+    maria_response=$(make_request "POST" "/worldskills/A2/jwt/generate_token" "$maria_login" "$headers" "200")
     
-    if [[ "$julia_response" == *"ERROR"* ]]; then
-        print_failure "Login da Júlia falhou"
+    if [[ "$maria_response" == *"ERROR"* ]]; then
+        print_failure "Login da Maria falhou"
         return 1
     fi
     
-    if [[ "$julia_response" == *"token"* ]] && [[ "$julia_response" == *"Júlia"* ]]; then
-        print_success "Login da Júlia funcionando"
+    if [[ "$maria_response" == *"token"* ]] && [[ "$maria_response" == *"Maria"* ]]; then
+        print_success "Login da Maria funcionando"
         
-        local julia_token
-        julia_token=$(extract_json_value "$julia_response" "token")
-        if [ -z "$julia_token" ]; then
-            julia_token=$(echo "$julia_response" | grep -o '"token":"[^"]*"' | cut -d'"' -f4)
+        local maria_token
+        maria_token=$(extract_json_value "$maria_response" "token")
+        if [ -z "$maria_token" ]; then
+            maria_token=$(echo "$maria_response" | grep -o '"token":"[^"]*"' | cut -d'"' -f4)
         fi
         
-        # Testar endpoint com token da Júlia
-        print_test "Acesso às bibliotecas com token da Júlia"
-        local auth_header="Authorization: Bearer $julia_token"
+        # Testar endpoint com token da Maria
+        print_test "Acesso às escolas com token da Maria"
+        local auth_header="Authorization: Bearer $maria_token"
         
-        local libraries_response
-        libraries_response=$(make_request "GET" "/worldskills/bibliotech/library_list" "" "$auth_header" "200")
+        local schools_response
+        schools_response=$(make_request "GET" "/worldskills/A2/school_list" "" "$auth_header" "200")
         
-        if [[ "$libraries_response" == *"libraries"* ]]; then
+        if [[ "$schools_response" == *"schools"* ]]; then
             print_success "Múltiplos usuários funcionando corretamente"
         else
             print_failure "Problemas com múltiplos usuários"
             return 1
         fi
     else
-        print_failure "Login da Júlia retornou resposta inesperada"
+        print_failure "Login da Maria retornou resposta inesperada"
         return 1
     fi
 }
@@ -504,9 +499,9 @@ test_debug_routes() {
         return 1
     fi
     
-    if [[ "$response" == *"available_routes"* ]] && [[ "$response" == *"BiblioTech"* ]]; then
+    if [[ "$response" == *"available_routes"* ]] && [[ "$response" == *"SafeEdu"* ]]; then
         print_success "Debug routes funcionando"
-        print_info "API identificada como BiblioTech"
+        print_info "API identificada como SafeEdu"
     else
         print_failure "Debug routes retornou resposta inesperada"
         return 1
@@ -520,7 +515,7 @@ test_debug_routes() {
 generate_report() {
     echo ""
     echo -e "${CYAN}=============================================="
-    echo "📊 Relatório de Testes - BiblioTech API"
+    echo "📊 Relatório de Testes - SafeEdu API"
     echo "=============================================="
     echo -e "${NC}"
     
@@ -538,7 +533,7 @@ generate_report() {
     echo ""
     if [ "$FAILED_TESTS" -eq 0 ]; then
         echo -e "${GREEN}🎉 Todos os testes passaram!${NC}"
-        echo -e "${GREEN}✅ BiblioTech API está funcionando perfeitamente${NC}"
+        echo -e "${GREEN}✅ SafeEdu API está funcionando perfeitamente${NC}"
     else
         echo -e "${RED}❌ $FAILED_TESTS teste(s) falharam${NC}"
         echo -e "${YELLOW}⚠️  Verifique os logs acima para detalhes${NC}"
@@ -547,22 +542,22 @@ generate_report() {
     echo ""
     echo -e "${BLUE}🔗 Endpoints testados:${NC}"
     echo "  GET  $BASE_URL/health"
-    echo "  GET  $BASE_URL/worldskills/bibliotech/motd"
-    echo "  POST $BASE_URL/worldskills/bibliotech/jwt/generate_token"
-    echo "  POST $BASE_URL/worldskills/bibliotech/jwt/validate_token"
-    echo "  GET  $BASE_URL/worldskills/bibliotech/library_list"
-    echo "  GET  $BASE_URL/worldskills/bibliotech/comments"
-    echo "  POST $BASE_URL/worldskills/bibliotech/comments"
-    echo "  GET  $BASE_URL/worldskills/bibliotech/prints"
-    echo "  POST $BASE_URL/worldskills/bibliotech/prints"
+    echo "  GET  $BASE_URL/worldskills/A2/motd"
+    echo "  POST $BASE_URL/worldskills/A2/jwt/generate_token"
+    echo "  POST $BASE_URL/worldskills/A2/jwt/validate_token"
+    echo "  GET  $BASE_URL/worldskills/A2/school_list"
+    echo "  GET  $BASE_URL/worldskills/A2/comments"
+    echo "  POST $BASE_URL/worldskills/A2/comments"
+    echo "  GET  $BASE_URL/worldskills/A2/prints"
+    echo "  POST $BASE_URL/worldskills/A2/prints"
     echo ""
     
-    echo -e "${BLUE}🏛️ Funcionalidades BiblioTech validadas:${NC}"
-    echo "  ✅ Senha com 8+ caracteres + letras + números + símbolos"
-    echo "  ✅ Lista de bibliotecas ordenada por data de cadastro (DESC)"
-    echo "  ✅ URLs com /worldskills/bibliotech/"
-    echo "  ✅ Contexto alterado de escolas para bibliotecas"
-    echo "  ✅ Empresa EduLib identificada"
+    echo -e "${BLUE}🏫 Funcionalidades SafeEdu validadas:${NC}"
+    echo "  ✅ Senha com 6+ caracteres + letras + números"
+    echo "  ✅ Lista de escolas ordenada alfabeticamente"
+    echo "  ✅ URLs com /worldskills/A2/"
+    echo "  ✅ Contexto alterado de bibliotecas para escolas"
+    echo "  ✅ Empresa SafeEdu identificada"
     echo ""
 }
 
@@ -582,14 +577,14 @@ main() {
                 echo "Uso: $0 [BASE_URL] [-v|--verbose] [-h|--help]"
                 echo ""
                 echo "Argumentos:"
-                echo "  BASE_URL     URL base da API (padrão: http://localhost:8080)"
+                echo "  BASE_URL     URL base da API (padrão: https://bibliotech-api.fly.dev)"
                 echo "  -v, --verbose    Mostrar informações detalhadas"
                 echo "  -h, --help       Mostrar esta ajuda"
                 echo ""
                 echo "Exemplos:"
-                echo "  $0                                                    # Testar local"
-                echo "  $0 https://bibliotech-api.fly.dev        # Testar produção"
-                echo "  $0 -v                                                 # Modo verbose"
+                echo "  $0                                                # Testar produção"
+                echo "  $0 http://localhost:8080                          # Testar local"
+                echo "  $0 -v                                             # Modo verbose"
                 exit 0
                 ;;
             *)
@@ -610,341 +605,7 @@ main() {
     test_debug_routes
     test_motd
     test_authentication
-    test_library_list
-    test_comments
-    test_prints
-    test_second_user
-    
-    # Relatório final
-    generate_report
-    
-    # Exit code baseado nos resultados
-    if [ "$FAILED_TESTS" -eq 0 ]; then
-        exit 0
-    else
-        exit 1
-    fi
-}
-
-# =============================================================================
-# EXECUÇÃO
-# =============================================================================
-
-# Verificar dependências
-if ! command -v curl >/dev/null 2>&1; then
-    echo -e "${RED}[ERROR]${NC} curl não encontrado. Instale curl para executar os testes."
-    exit 1
-fi
-
-# Executar
-main "$@"\n'"X-Force-Error: true"'
-    local error_response
-    error_response=$(make_request "GET" "/worldskills/bibliotech/library_list" "" "$error_headers" "500")
-    
-    if [[ "$error_response" == *"STATUS_ERROR"* ]]; then
-        print_failure "Erro forçado deveria retornar 500"
-        return 1
-    else
-        print_success "Erro de avaliação funcionando (status 500)"
-        print_info "Erro simulado: para teste de tratamento de erros"
-    fi
-    
-    # NOVO: Teste de erro de serviço indisponível
-    print_test "GET /worldskills/bibliotech/library_list?test_error=biblioteca_indisponivel"
-    local service_error
-    service_error=$(make_request "GET" "/worldskills/bibliotech/library_list?test_error=biblioteca_indisponivel" "" "$auth_header" "503")
-    
-    if [[ "$service_error" == *"STATUS_ERROR"* ]]; then
-        print_failure "Erro de serviço deveria retornar 503"
-        return 1
-    else
-        print_success "Erro de serviço indisponível funcionando (status 503)"
-        print_info "Simulação: sistema em manutenção"
-    fi
-}
-
-test_comments() {
-    print_section "Sistema de Comentários"
-    
-    if [ -z "$JWT_TOKEN" ]; then
-        print_failure "Token JWT necessário para este teste"
-        return 1
-    fi
-    
-    local auth_header="Authorization: Bearer $JWT_TOKEN"
-    local content_header="Content-Type: application/json"
-    local headers="$auth_header"$'\n'"$content_header"
-    
-    # Teste 1: Listar comentários
-    print_test "GET /worldskills/bibliotech/comments"
-    local response
-    response=$(make_request "GET" "/worldskills/bibliotech/comments" "" "$auth_header" "200")
-    
-    if [[ "$response" == *"ERROR"* ]]; then
-        print_failure "Listagem de comentários falhou"
-        return 1
-    fi
-    
-    if [[ "$response" == *"comments"* ]]; then
-        print_success "Listagem de comentários funcionando"
-        
-        local comment_count
-        comment_count=$(echo "$response" | grep -o '"comentario"' | wc -l)
-        print_info "Comentários encontrados: $comment_count"
-    else
-        print_failure "Listagem de comentários retornou resposta inesperada"
-        return 1
-    fi
-    
-    # Teste 2: Adicionar comentário
-    print_test "POST /worldskills/bibliotech/comments (adicionar comentário)"
-    local comment_data='{"id_biblioteca": "1", "comentario": "Comentário de teste BiblioTech - '$(date +%s)'"}'
-    
-    local add_response
-    add_response=$(make_request "POST" "/worldskills/bibliotech/comments" "$comment_data" "$headers" "200")
-    
-    if [[ "$add_response" == *"ERROR"* ]]; then
-        print_failure "Adição de comentário falhou"
-        return 1
-    fi
-    
-    if [[ "$add_response" == *"success"* ]] && [[ "$add_response" == *"Comentário adicionado"* ]]; then
-        print_success "Adição de comentário funcionando"
-    else
-        print_failure "Adição de comentário retornou resposta inesperada"
-        return 1
-    fi
-    
-    # Teste 3: Comentário com biblioteca inexistente
-    print_test "POST /worldskills/bibliotech/comments (biblioteca inexistente)"
-    local invalid_comment='{"id_biblioteca": "999", "comentario": "Teste"}'
-    
-    local invalid_response
-    invalid_response=$(make_request "POST" "/worldskills/bibliotech/comments" "$invalid_comment" "$headers" "404")
-    
-    if [[ "$invalid_response" == *"STATUS_ERROR"* ]]; then
-        print_failure "Biblioteca inexistente deveria retornar 404"
-        return 1
-    else
-        print_success "Validação de biblioteca existente funcionando"
-    fi
-}
-
-test_prints() {
-    print_section "Sistema de Prints"
-    
-    if [ -z "$JWT_TOKEN" ]; then
-        print_failure "Token JWT necessário para este teste"
-        return 1
-    fi
-    
-    local auth_header="Authorization: Bearer $JWT_TOKEN"
-    
-    # Teste 1: Listar prints
-    print_test "GET /worldskills/bibliotech/prints"
-    local response
-    response=$(make_request "GET" "/worldskills/bibliotech/prints" "" "$auth_header" "200")
-    
-    if [[ "$response" == *"ERROR"* ]]; then
-        print_failure "Listagem de prints falhou"
-        return 1
-    fi
-    
-    if [[ "$response" == *"prints"* ]]; then
-        print_success "Listagem de prints funcionando"
-        
-        local print_count
-        print_count=$(echo "$response" | grep -o '"file_name"' | wc -l)
-        print_info "Prints encontrados: $print_count"
-    else
-        print_failure "Listagem de prints retornou resposta inesperada"
-        return 1
-    fi
-    
-    # Teste 2: Upload de print via JSON
-    print_test "POST /worldskills/bibliotech/prints (JSON)"
-    local json_upload='{"id_user": "1"}'
-    local json_headers="$auth_header"$'\n'"Content-Type: application/json"
-    
-    local upload_response
-    upload_response=$(make_request "POST" "/worldskills/bibliotech/prints" "$json_upload" "$json_headers" "200")
-    
-    if [[ "$upload_response" == *"ERROR"* ]]; then
-        print_failure "Upload JSON de print falhou"
-        return 1
-    fi
-    
-    if [[ "$upload_response" == *"success"* ]] && [[ "$upload_response" == *"bibliotech"* ]]; then
-        print_success "Upload JSON de print funcionando"
-    else
-        print_failure "Upload JSON de print retornou resposta inesperada"
-        return 1
-    fi
-}
-
-test_second_user() {
-    print_section "Teste com Segundo Usuário"
-    
-    # Login com Júlia
-    print_test "Login com julia@edulib.com"
-    local julia_login='{"email": "julia@edulib.com", "password": "julia123!"}'
-    local headers="Content-Type: application/json"
-    
-    local julia_response
-    julia_response=$(make_request "POST" "/worldskills/bibliotech/jwt/generate_token" "$julia_login" "$headers" "200")
-    
-    if [[ "$julia_response" == *"ERROR"* ]]; then
-        print_failure "Login da Júlia falhou"
-        return 1
-    fi
-    
-    if [[ "$julia_response" == *"token"* ]] && [[ "$julia_response" == *"Júlia"* ]]; then
-        print_success "Login da Júlia funcionando"
-        
-        local julia_token
-        julia_token=$(extract_json_value "$julia_response" "token")
-        if [ -z "$julia_token" ]; then
-            julia_token=$(echo "$julia_response" | grep -o '"token":"[^"]*"' | cut -d'"' -f4)
-        fi
-        
-        # Testar endpoint com token da Júlia
-        print_test "Acesso às bibliotecas com token da Júlia"
-        local auth_header="Authorization: Bearer $julia_token"
-        
-        local libraries_response
-        libraries_response=$(make_request "GET" "/worldskills/bibliotech/library_list" "" "$auth_header" "200")
-        
-        if [[ "$libraries_response" == *"libraries"* ]]; then
-            print_success "Múltiplos usuários funcionando corretamente"
-        else
-            print_failure "Problemas com múltiplos usuários"
-            return 1
-        fi
-    else
-        print_failure "Login da Júlia retornou resposta inesperada"
-        return 1
-    fi
-}
-
-test_debug_routes() {
-    print_section "Debug Routes"
-    
-    print_test "GET /debug/routes"
-    local response
-    response=$(make_request "GET" "/debug/routes" "" "" "200")
-    
-    if [[ "$response" == *"ERROR"* ]]; then
-        print_failure "Debug routes falhou"
-        return 1
-    fi
-    
-    if [[ "$response" == *"available_routes"* ]] && [[ "$response" == *"BiblioTech"* ]]; then
-        print_success "Debug routes funcionando"
-        print_info "API identificada como BiblioTech"
-    else
-        print_failure "Debug routes retornou resposta inesperada"
-        return 1
-    fi
-}
-
-# =============================================================================
-# RELATÓRIO FINAL
-# =============================================================================
-
-generate_report() {
-    echo ""
-    echo -e "${CYAN}=============================================="
-    echo "📊 Relatório de Testes - BiblioTech API"
-    echo "=============================================="
-    echo -e "${NC}"
-    
-    echo -e "${BLUE}Estatísticas:${NC}"
-    echo "  Total de testes: $TOTAL_TESTS"
-    echo -e "  ${GREEN}Passou: $PASSED_TESTS${NC}"
-    echo -e "  ${RED}Falhou: $FAILED_TESTS${NC}"
-    
-    local success_rate
-    if [ "$TOTAL_TESTS" -gt 0 ]; then
-        success_rate=$((PASSED_TESTS * 100 / TOTAL_TESTS))
-        echo "  Taxa de sucesso: $success_rate%"
-    fi
-    
-    echo ""
-    if [ "$FAILED_TESTS" -eq 0 ]; then
-        echo -e "${GREEN}🎉 Todos os testes passaram!${NC}"
-        echo -e "${GREEN}✅ BiblioTech API está funcionando perfeitamente${NC}"
-    else
-        echo -e "${RED}❌ $FAILED_TESTS teste(s) falharam${NC}"
-        echo -e "${YELLOW}⚠️  Verifique os logs acima para detalhes${NC}"
-    fi
-    
-    echo ""
-    echo -e "${BLUE}🔗 Endpoints testados:${NC}"
-    echo "  GET  $BASE_URL/health"
-    echo "  GET  $BASE_URL/worldskills/bibliotech/motd"
-    echo "  POST $BASE_URL/worldskills/bibliotech/jwt/generate_token"
-    echo "  POST $BASE_URL/worldskills/bibliotech/jwt/validate_token"
-    echo "  GET  $BASE_URL/worldskills/bibliotech/library_list"
-    echo "  GET  $BASE_URL/worldskills/bibliotech/comments"
-    echo "  POST $BASE_URL/worldskills/bibliotech/comments"
-    echo "  GET  $BASE_URL/worldskills/bibliotech/prints"
-    echo "  POST $BASE_URL/worldskills/bibliotech/prints"
-    echo ""
-    
-    echo -e "${BLUE}🏛️ Funcionalidades BiblioTech validadas:${NC}"
-    echo "  ✅ Senha com 8+ caracteres + letras + números + símbolos"
-    echo "  ✅ Lista de bibliotecas ordenada por data de cadastro (DESC)"
-    echo "  ✅ URLs com /worldskills/bibliotech/"
-    echo "  ✅ Contexto alterado de escolas para bibliotecas"
-    echo "  ✅ Empresa EduLib identificada"
-    echo ""
-}
-
-# =============================================================================
-# FUNÇÃO PRINCIPAL
-# =============================================================================
-
-main() {
-    # Parse argumentos
-    while [[ $# -gt 0 ]]; do
-        case $1 in
-            -v|--verbose)
-                VERBOSE=true
-                shift
-                ;;
-            -h|--help)
-                echo "Uso: $0 [BASE_URL] [-v|--verbose] [-h|--help]"
-                echo ""
-                echo "Argumentos:"
-                echo "  BASE_URL     URL base da API (padrão: http://localhost:8080)"
-                echo "  -v, --verbose    Mostrar informações detalhadas"
-                echo "  -h, --help       Mostrar esta ajuda"
-                echo ""
-                echo "Exemplos:"
-                echo "  $0                                                    # Testar local"
-                echo "  $0 https://bibliotech-api.fly.dev        # Testar produção"
-                echo "  $0 -v                                                 # Modo verbose"
-                exit 0
-                ;;
-            *)
-                BASE_URL="$1"
-                shift
-                ;;
-        esac
-    done
-    
-    # Banner
-    print_banner
-    
-    # Verificar disponibilidade
-    check_api_availability
-    
-    # Executar testes
-    test_health_check
-    test_debug_routes
-    test_motd
-    test_authentication
-    test_library_list
+    test_school_list
     test_comments
     test_prints
     test_second_user
