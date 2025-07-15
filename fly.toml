@@ -112,8 +112,8 @@ kill_timeout = "5s"
 # =============================================================================
 
 [mounts]
-  # Volume para uploads de arquivos
-  source = "safeedu_uploads"
+  # Volume para uploads de arquivos (mantendo nome existente)
+  source = "bibliotech_uploads"
   destination = "/app/uploads"
   initial_size = "1gb"        # Tamanho inicial de 1GB
   
@@ -138,77 +138,29 @@ kill_timeout = "5s"
 # CONFIGURAÇÕES DE REGIÃO E SCALING
 # =============================================================================
 
-# Configurações de auto-scaling
+# Configurações de auto-scaling otimizadas com auto-stop
 [scaling]
-  min_machines_running = 1    # Mínimo de 1 instância sempre rodando
-  max_machines_running = 3    # Máximo de 3 instâncias (para economia)
+  min_machines_running = 0    # Permite parar todas as máquinas (economia)
+  max_machines_running = 3    # Máximo de 3 instâncias (para alta demanda)
 
 # =============================================================================
 # AUTO STOP - ECONOMIA DE RECURSOS
 # =============================================================================
 
-# Parar máquinas automaticamente após 3 horas de inatividade
+# Configuração de auto-stop com timeout de 3 horas
 [http_service]
   auto_stop_machines = true
   auto_start_machines = true
-  min_machines_running = 0    # Permite parar todas as máquinas
-  
-  # Configurações de timeout
-  [http_service.concurrency]
-    type = "requests"
-    soft_limit = 200
-    hard_limit = 500
-    
-  # Auto stop após 3 horas (10800 segundos)
-  [http_service.auto_stop_machines]
-    enabled = true
-    min_machines_running = 0
-    max_machines_running = 3
-    
-# Configuração de máquinas automáticas
-[auto_stop_machines]
-  enabled = true
   min_machines_running = 0
-  max_seconds_without_requests = 10800  # 3 horas = 3 * 60 * 60 = 10800 segundos
+  
+# Configuração de timeout para parar máquinas automaticamente
+[auto_stop_machines]
+  # Parar máquinas após 3 horas de inatividade (10800 segundos)
+  timeout = "3h"
 
 # =============================================================================
 # CONFIGURAÇÕES ESPECÍFICAS DA SAFEEDU API
 # =============================================================================
-
-# Variáveis específicas do projeto
-[env.safeedu]
-  # Endpoints base
-  JWT_GENERATE_PATH = "/worldskills/A2/jwt/generate_token"
-  JWT_VALIDATE_PATH = "/worldskills/A2/jwt/validate_token"
-  MOTD_PATH = "/worldskills/A2/motd"
-  SCHOOL_LIST_PATH = "/worldskills/A2/school_list"
-  COMMENTS_PATH = "/worldskills/A2/comments"
-  PRINTS_PATH = "/worldskills/A2/prints"
-  
-  # Configurações de dados
-  DEFAULT_SCHOOLS_COUNT = "5"
-  ORDER_BY = "alfabetico"
-  
-  # Configurações de segurança
-  PASSWORD_MIN_LENGTH = "6"
-  PASSWORD_REQUIRE_NUMBERS = "true"
-  PASSWORD_REQUIRE_LETTERS = "true"
-  JWT_EXPIRATION_HOURS = "24"
-
-# =============================================================================
-# CONFIGURAÇÕES DE LOGS
-# =============================================================================
-
-# Configurações de logging específicas
-[logging]
-  # Nível de log
-  level = "info"
-  
-  # Formato de log
-  format = "json"
-  
-  # Destino dos logs
-  output = ["stdout", "stderr"]
 
 # =============================================================================
 # CONFIGURAÇÕES DE RECURSOS

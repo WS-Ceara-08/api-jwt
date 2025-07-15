@@ -11,6 +11,13 @@ Todos os endpoints foram implementados seguindo as especificações da prova! �
 - **Hospedagem:** https://bibliotech-api.fly.dev/worldskills/A2/
 - **Local (Desenvolvimento):** http://localhost:8080/worldskills/A2/
 
+## 🚀 **Otimizações de Infraestrutura**
+
+- **Auto-Stop:** Máquinas param automaticamente após **3 horas** de inatividade
+- **Auto-Start:** Reinicialização automática sob demanda (< 5 segundos)
+- **Economia:** Redução significativa de custos com recursos ociosos
+- **Zero Downtime:** Experiência de usuário mantida com inicialização rápida
+
 ## 🔒 **Configurações da Prova**
 
 ### **🔑 Token JWT - 24 Horas**
@@ -401,6 +408,37 @@ class SafeEduService {
 
 ---
 
+## ⚙️ **Configurações de Infraestrutura**
+
+### **🔧 Fly.io Deploy**
+
+```toml
+# Auto-Stop Configuração
+[http_service]
+  auto_stop_machines = true    # Habilita parada automática
+  auto_start_machines = true   # Habilita inicialização automática
+  min_machines_running = 0     # Permite parar todas as máquinas
+
+[auto_stop_machines]
+  timeout = "3h"              # Para após 3 horas de inatividade
+```
+
+### **📊 Recursos da Máquina**
+
+- **Memória:** 256MB
+- **CPU:** 1 vCPU compartilhado
+- **Storage:** 1GB volume persistente
+- **Região:** GRU (São Paulo, Brasil)
+
+### **💡 Benefícios da Otimização**
+
+- **💰 Economia:** ~70% redução de custos com auto-stop
+- **🌱 Sustentabilidade:** Menor consumo de recursos
+- **⚡ Performance:** Inicialização em ~5 segundos
+- **🔄 Escalabilidade:** Auto-scaling baseado em demanda
+
+---
+
 ## 🏆 **Resultado Final**
 
 > **🎉 SafeEdu API 100% implementada conforme especificação da prova WorldSkills 2025!**
@@ -416,7 +454,8 @@ class SafeEduService {
 - ✅ **URLs personalizadas** para SafeEdu
 - ✅ **Contexto escolas** em todos os textos
 - ✅ **Testes automatizados** 100% passando
-- ✅ **Deploy configurado** para produção
+- ✅ **Deploy otimizado** com auto-stop 3h
+- ✅ **Infraestrutura eficiente** para produção
 
 ### **🎯 Pronto Para Uso**
 

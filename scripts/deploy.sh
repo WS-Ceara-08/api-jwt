@@ -24,7 +24,7 @@ readonly NC='\033[0m' # No Color
 # Configurações do projeto SafeEdu
 readonly APP_NAME="bibliotech-api"
 readonly REGION="gru"
-readonly VOLUME_NAME="safeedu_uploads"
+readonly VOLUME_NAME="bibliotech_uploads"  # Volume mantido para compatibilidade
 readonly VOLUME_SIZE="1"
 readonly API_NAME="SafeEdu"
 readonly COMPANY="SafeEdu"
@@ -39,6 +39,7 @@ print_banner() {
     echo "🛡️ SafeEdu API - Deploy Automatizado"
     echo "🏢 Empresa: SafeEdu"
     echo "🌐 Destino: https://bibliotech-api.fly.dev"
+    echo "⚡ Auto-Stop: 3h de inatividade"
     echo "📅 $(date '+%Y-%m-%d %H:%M:%S')"
     echo "=============================================="
     echo -e "${NC}"
